@@ -57,15 +57,15 @@ export default function NavigationMenu() {
   }, []);
   return (
     <div className="grid grid-cols-3 gap-4">
-      <div className={`flex flex-col p-4 text-xl items-center rounded-xl border-2 ${selection === "back" ? "border-black dark:border-white" : "border-gray-200 dark:border-gray-800"}`}>
+      <div className={`flex flex-col p-4 gap-1 text-xl items-center rounded-xl border-2 ${selection === "back" ? "border-black dark:border-white" : "border-gray-200 dark:border-gray-800"}`}>
         <FontAwesomeIcon icon={faArrowLeft} size="2xl" />
         <p>Back</p>
       </div>
-      <div className={`flex flex-col p-4 text-xl items-center rounded-xl border-2 ${selection === "shop" ? "border-black dark:border-white" : "border-gray-200 dark:border-gray-800"}`}>
+      <div className={`flex flex-col p-4 gap-1 text-xl items-center rounded-xl border-2 ${selection === "shop" ? "border-black dark:border-white" : "border-gray-200 dark:border-gray-800"}`}>
         <FontAwesomeIcon icon={faShop} size="2xl" />
         <p>Shop</p>
       </div>
-      <div className={`flex flex-col p-4 text-xl items-center rounded-xl border-2 ${selection === "settings" ? "border-black dark:border-white" : "border-gray-200 dark:border-gray-800"}`}>
+      <div className={`flex flex-col p-4 gap-1 text-xl items-center rounded-xl border-2 ${selection === "settings" ? "border-black dark:border-white" : "border-gray-200 dark:border-gray-800"}`}>
         <FontAwesomeIcon icon={faGear} size="2xl" />
         <p>Settings</p>
       </div>

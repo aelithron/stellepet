@@ -19,7 +19,7 @@ export default function StellePet() {
   }
   useEffect(() => {
     if (!pats) return;
-    localStorage.setItem("pats", pats.toString())
+    localStorage.setItem("pats", pats.toString());
   }, [pats]);
   useEffect(() => {
     const storage = { pats: localStorage.getItem("pats") };

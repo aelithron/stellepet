@@ -1,10 +1,10 @@
 "use client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faRefresh } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-export default function SettingsMenu() {
+export default function ShopMenu() {
   const router = useRouter();
   const [selection, setSelection] = useState<number>(0);
   const selRef = useRef<number>(selection);
@@ -19,8 +19,6 @@ export default function SettingsMenu() {
             router.push("/menu");
             break;
           case 1:
-            localStorage.setItem("pats", "0");
-            router.push("/");
             break;
           default:
             return;
@@ -52,8 +50,8 @@ export default function SettingsMenu() {
         <p>Back</p>
       </div>
       <div className={`flex flex-col p-4 gap-1 text-xl items-center rounded-xl border-2 ${selection === 1 ? "border-black dark:border-white" : "border-gray-200 dark:border-gray-800"}`}>
-        <FontAwesomeIcon icon={faRefresh} size="2xl" />
-        <p>Reset</p>
+        <FontAwesomeIcon icon={faQuestion} size="2xl" />
+        <p>coming soon!</p>
       </div>   
     </div>
   );
