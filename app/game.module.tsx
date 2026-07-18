@@ -18,6 +18,11 @@ export default function StellePet() {
     clearLast.current = setTimeout(() => setIsPatting(false), 400);
   }
   useEffect(() => {
+    if (!pats) return;
+    localStorage.setItem("pats", pats.toString())
+  }, [pats]);
+  useEffect(() => {
+    const storage = { pats: localStorage.getItem("pats") };
     const down = (e: KeyboardEvent) => {
       if (e.code !== "Space") return;
       e.preventDefault();
@@ -31,7 +36,6 @@ export default function StellePet() {
     }
     addEventListener("keydown", down);
     addEventListener("keyup", up);
-    const storage = { pats: localStorage.getItem("pats") };
     if (storage.pats === null || isNaN(parseInt(storage.pats))) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setPats(0);
@@ -42,7 +46,7 @@ export default function StellePet() {
       removeEventListener("keydown", down);
       removeEventListener("keyup", up);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   if (pats === undefined) return (<h1 className="text-xl font-semibold">Loading...</h1>);
   return (
