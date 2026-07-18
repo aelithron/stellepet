@@ -21,7 +21,7 @@ export default function StellePet() {
     const down = (e: KeyboardEvent) => {
       if (e.code !== "Space") return;
       e.preventDefault();
-      const timer = setTimeout(() => router.push("/menu"), 200)
+      const timer = setTimeout(() => router.push("/menu"), 400)
       addEventListener("keyup", () => clearTimeout(timer), { once: true });
     }
     const up = (e: KeyboardEvent) => {
