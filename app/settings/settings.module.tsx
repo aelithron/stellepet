@@ -20,6 +20,8 @@ export default function SettingsMenu() {
             break;
           case 1:
             localStorage.setItem("pats", "0");
+            localStorage.setItem("autoPetters", "0");
+            localStorage.setItem("catEars", "false");
             router.push("/");
             break;
           default:
