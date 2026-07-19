@@ -3,20 +3,23 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faGear, faShop } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { getKey } from "../key.module";
 
 export default function NavigationMenu() {
   const router = useRouter();
+  const key = useRef<string | null>(null);
   const [ignoreKeyUp, setIgnoreKeyUp] = useState<boolean>(true);
   const [selection, setSelection] = useState<"back" | "shop" | "settings">("back");
   const selRef = useRef<"back" | "shop" | "settings">(selection);
   const ignoreUpRef = useRef<boolean>(ignoreKeyUp);
+  useEffect(() => { key.current = getKey(); }, []);
   useEffect(() => { selRef.current = selection; }, [selection]);
   useEffect(() => { ignoreUpRef.current = ignoreKeyUp }, [ignoreKeyUp]);
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.code !== "Space") return;
-      setIgnoreKeyUp(false);
+      if (e.key !== key.current) return;
       e.preventDefault();
+      setIgnoreKeyUp(false);
       const timer = setTimeout(() => {
         switch (selRef.current) {
           case "back":
@@ -35,7 +38,7 @@ export default function NavigationMenu() {
       addEventListener("keyup", () => clearTimeout(timer), { once: true });
     }
     const up = (e: KeyboardEvent) => {
-      if (e.code !== "Space") return;
+      if (e.key !== key.current) return;
       if (ignoreUpRef.current) {
         setIgnoreKeyUp(false);
         return;

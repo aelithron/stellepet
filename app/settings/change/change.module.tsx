@@ -1,16 +1,22 @@
 "use client";
+import { getKey } from "@/app/key.module";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 export default function ChangeKey() {
   const router = useRouter();
+  const [key, setKey] = useState<string | null>(null);
+  const keyRef = useRef<string | null>(key);
   const [newKey, setNewKey] = useState<string | undefined>();
   const newKeyRef = useRef<string | undefined>(newKey);
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => { setKey(getKey()); }, []);
+  useEffect(() => { keyRef.current = key }, [key])
   useEffect(() => { newKeyRef.current = newKey }, [newKey]);
   useEffect(() => {
     function down(e: KeyboardEvent) {
       e.preventDefault();
-      if (e.code === "Space") {
+      if (e.key === keyRef.current) {
         router.push("/settings");
         return;
       }
@@ -32,11 +38,11 @@ export default function ChangeKey() {
     <div>
       {!newKey && <div className="flex flex-col gap-2 text-center">
         <p>Press the key you would like to change to!</p>
-        <p>Alternatively, press space to go back.</p>
+        <p>Alternatively, press <code>{key !== " " ? key : "Space"}</code> to go back.</p>
       </div>}
       {newKey && <div className="flex flex-col gap-2 text-center">
-        <p>Are you sure you want to change your key from space to <code>{newKey}</code>?</p>
-        <p>Press <code>{newKey}</code> again to confirm this change, or space to go back.</p>
+        <p>Are you sure you want to change your key from <code>{key}</code> to <code>{newKey !== " " ? newKey : "Space"}</code>?</p>
+        <p>Press <code>{newKey !== " " ? newKey : "Space"}</code> again to confirm this change, or <code>{key !== " " ? key : "Space"}</code> to go back.</p>
       </div>}
     </div>
   );

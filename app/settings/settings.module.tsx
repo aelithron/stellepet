@@ -3,18 +3,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faPencil, faRefresh } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { getKey } from "../key.module";
 
 export default function SettingsMenu() {
   const router = useRouter();
+  const key = useRef<string | null>(null);
   const [ignoreKeyUp, setIgnoreKeyUp] = useState<boolean>(true);
   const [selection, setSelection] = useState<number>(0);
   const ignoreUpRef = useRef<boolean>(ignoreKeyUp);
   const selRef = useRef<number>(selection);
+  useEffect(() => { key.current = getKey(); }, []);
   useEffect(() => { selRef.current = selection; }, [selection]);
   useEffect(() => { ignoreUpRef.current = ignoreKeyUp }, [ignoreKeyUp]);
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.code !== "Space") return;
+      if (e.key !== key.current) return;
       setIgnoreKeyUp(false);
       e.preventDefault();
       const timer = setTimeout(() => {
@@ -38,7 +41,7 @@ export default function SettingsMenu() {
       addEventListener("keyup", () => clearTimeout(timer), { once: true });
     }
     const up = (e: KeyboardEvent) => {
-      if (e.code !== "Space") return;
+      if (e.key !== key.current) return;
       if (ignoreUpRef.current) {
         setIgnoreKeyUp(false);
         return;

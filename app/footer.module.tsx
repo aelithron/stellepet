@@ -13,4 +13,4 @@ export default function Footer() {
       <a href="https://notbyai.fyi" target="_blank"><Image src={notByAI} alt="Not by AI" /></a>
     </footer>
   )
-} 
+}

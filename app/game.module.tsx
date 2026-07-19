@@ -8,9 +8,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faShop } from "@fortawesome/free-solid-svg-icons";
 import autoPet from "@/public/shop/auto_pet.gif";
 import catEars from "@/public/shop/cat_ears.png";
+import { getKey } from "./key.module";
 
 export default function StellePet() {
   const router = useRouter();
+  const key = useRef<string | null>(null);
   const [pats, setPats] = useState<number | undefined>(undefined);
   const [isPatting, setIsPatting] = useState<boolean>(false);
   const [catEarsOwned, setCatEarsOwned] = useState<boolean>(false);
@@ -38,18 +40,19 @@ export default function StellePet() {
     if (!pats) return;
     localStorage.setItem("pats", pats.toString());
   }, [pats]);
+  useEffect(() => { key.current = getKey(); }, []);
   useEffect(() => { catEarsOwnedRef.current = catEarsOwned }, [catEarsOwned]);
   useEffect(() => { autoPettersOwnedRef.current = autoPettersOwned }, [autoPettersOwned]);
   useEffect(() => {
     const storage = { pats: localStorage.getItem("pats"), catEars: (localStorage.getItem("catEars") === "true"), autoPetters: localStorage.getItem("autoPetters") };
     const down = (e: KeyboardEvent) => {
-      if (e.code !== "Space") return;
+      if (e.key !== key.current) return;
       e.preventDefault();
       const timer = setTimeout(() => router.push("/menu"), 400)
       addEventListener("keyup", () => clearTimeout(timer), { once: true });
     }
     const up = (e: KeyboardEvent) => {
-      if (e.code !== "Space") return;
+      if (e.key !== key.current) return;
       addPat();
       e.preventDefault();
     }

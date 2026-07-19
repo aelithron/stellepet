@@ -6,9 +6,11 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import autoPet from "@/public/shop/auto_pet.gif";
 import catEars from "@/public/shop/cat_ears.png";
+import { getKey } from "../key.module";
 
 export default function ShopMenu() {
   const router = useRouter();
+  const key = useRef<string | null>(null);
   const [selection, setSelection] = useState<number>(0);
   const [pats, setPats] = useState<number | undefined>(undefined);
   const [autoPettersOwned, setAutoPettersOwned] = useState<number>(0);
@@ -21,6 +23,7 @@ export default function ShopMenu() {
   const [ignoreKeyUp, setIgnoreKeyUp] = useState<boolean>(true);
   const ignoreUpRef = useRef<boolean>(ignoreKeyUp);
 
+  useEffect(() => { key.current = getKey(); }, []);
   useEffect(() => { selRef.current = selection; }, [selection]);
   useEffect(() => { autoPetRef.current = autoPettersOwned; }, [autoPettersOwned]);
   useEffect(() => { catEarsRef.current = catEarsOwned; }, [catEarsOwned]);
@@ -28,7 +31,7 @@ export default function ShopMenu() {
   useEffect(() => { ignoreUpRef.current = ignoreKeyUp }, [ignoreKeyUp]);
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.code !== "Space") return;
+      if (e.key !== key.current) return;
       setIgnoreKeyUp(false);
       e.preventDefault();
       const timer = setTimeout(() => {
@@ -75,7 +78,7 @@ export default function ShopMenu() {
       addEventListener("keyup", () => clearTimeout(timer), { once: true });
     }
     const up = (e: KeyboardEvent) => {
-      if (e.code !== "Space") return;
+      if (e.key !== key.current) return;
       if (ignoreUpRef.current) {
         setIgnoreKeyUp(false);
         return;
