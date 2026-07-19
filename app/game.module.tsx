@@ -5,7 +5,7 @@ import stelle from "@/public/stelle.png";
 import pet from "@/public/petpet.gif";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShop } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faShop } from "@fortawesome/free-solid-svg-icons";
 import autoPet from "@/public/shop/auto_pet.gif";
 import catEars from "@/public/shop/cat_ears.png";
 
@@ -26,7 +26,7 @@ export default function StellePet() {
     if (clearLast.current) clearTimeout(clearLast.current);
     setIsPatting(true);
     let add = 1;
-    if (catEarsOwnedRef.current && Math.random() <= 0.2) {
+    if (catEarsOwnedRef.current && Math.random() <= 0.25) {
       add = 2;
       setCatEarsWorked(true);
       setTimeout(() => setCatEarsWorked(false), 1500);
@@ -106,7 +106,7 @@ export default function StellePet() {
               <p>Owned: {catEarsOwned ? "Yes" : "No"}</p>
             </div>
           </div>
-          <p>Get upgrades from the <FontAwesomeIcon icon={faShop} /> Shop in the Menu!</p>
+          <div className="text-balance"><p>Get upgrades from the</p> <p className="inline-block"><FontAwesomeIcon icon={faShop} /> Shop</p> in the <p className="inline-block"><FontAwesomeIcon icon={faBars} /> Menu</p>!</div>
         </div>
       </div>
     </div>

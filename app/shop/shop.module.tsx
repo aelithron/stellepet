@@ -56,14 +56,14 @@ export default function ShopMenu() {
               setIgnoreKeyUp(true);
               return;
             }
-            if (!patsRef.current || patsRef.current < 2500) {
-              setAlertBox(`You can't afford Cat Ears! (have ${patsRef.current ?? 0} pats, need 2500)`);
+            if (!patsRef.current || patsRef.current < 1500) {
+              setAlertBox(`You can't afford Cat Ears! (have ${patsRef.current ?? 0} pats, need 1500)`);
               setTimeout(() => setAlertBox(undefined), 2000);
               setIgnoreKeyUp(true);
               return;
             }
-            setPats(patsRef.current - 2500);
-            localStorage.setItem("pats", `${patsRef.current - 2500}`);
+            setPats(patsRef.current - 1500);
+            localStorage.setItem("pats", `${patsRef.current - 1500}`);
             setCatEarsOwned(true);
             localStorage.setItem("catEars", "true");
             setIgnoreKeyUp(true);

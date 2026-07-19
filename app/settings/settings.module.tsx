@@ -1,6 +1,6 @@
 "use client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faRefresh } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faPencil, faRefresh } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
@@ -23,6 +23,9 @@ export default function SettingsMenu() {
             router.push("/menu");
             break;
           case 1:
+            router.push("/settings/change");
+            break;
+          case 2:
             localStorage.setItem("pats", "0");
             localStorage.setItem("autoPetters", "0");
             localStorage.setItem("catEars", "false");
@@ -41,7 +44,7 @@ export default function SettingsMenu() {
         return;
       }
       e.preventDefault();
-      if (selRef.current >= 1) {
+      if (selRef.current >= 2) {
         setSelection(0);
         return;
       }
@@ -63,6 +66,10 @@ export default function SettingsMenu() {
         <p>Back</p>
       </div>
       <div className={`flex flex-col p-4 gap-1 text-xl items-center rounded-xl border-2 ${selection === 1 ? "border-black dark:border-white" : "border-gray-200 dark:border-gray-800"}`}>
+        <FontAwesomeIcon icon={faPencil} size="2xl" />
+        <p>Change Key</p>
+      </div>   
+      <div className={`flex flex-col p-4 gap-1 text-xl items-center rounded-xl border-2 ${selection === 2 ? "border-black dark:border-white" : "border-gray-200 dark:border-gray-800"}`}>
         <FontAwesomeIcon icon={faRefresh} size="2xl" />
         <p>Reset</p>
       </div>   
