@@ -4,11 +4,17 @@ import Image from "next/image";
 import stelle from "@/public/stelle.png";
 import pet from "@/public/petpet.gif";
 import { useRouter } from "next/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faShop } from "@fortawesome/free-solid-svg-icons";
+import autoPet from "@/public/shop/auto_pet.gif";
+import catEars from "@/public/shop/cat_ears.png";
 
 export default function StellePet() {
   const router = useRouter();
   const [pats, setPats] = useState<number | undefined>(undefined);
   const [isPatting, setIsPatting] = useState<boolean>(false);
+  const [catEarsOwned, setCatEarsOwned] = useState<boolean>(false);
+  const [autoPettersOwned, setAutoPettersOwned] = useState<number>(0);
   const clearLast = useRef<NodeJS.Timeout | undefined>(undefined);
   function addPat() {
     if (isPatting) return;
@@ -22,7 +28,7 @@ export default function StellePet() {
     localStorage.setItem("pats", pats.toString());
   }, [pats]);
   useEffect(() => {
-    const storage = { pats: localStorage.getItem("pats") };
+    const storage = { pats: localStorage.getItem("pats"), catEars: (localStorage.getItem("catEars") === "true"), autoPetters: localStorage.getItem("autoPetters") };
     const down = (e: KeyboardEvent) => {
       if (e.code !== "Space") return;
       e.preventDefault();
@@ -42,6 +48,12 @@ export default function StellePet() {
     } else {
       setPats(parseInt(storage.pats));
     }
+    if (storage.autoPetters === null || isNaN(parseInt(storage.autoPetters))) {
+      setAutoPettersOwned(0);
+    } else {
+      setAutoPettersOwned(parseInt(storage.autoPetters));
+    }
+    setCatEarsOwned(storage.catEars);
     return () => {
       removeEventListener("keydown", down);
       removeEventListener("keyup", up);
@@ -52,8 +64,30 @@ export default function StellePet() {
   return (
     <div className="flex flex-col gap-2 justify-center items-center align-middle">
       <p className="text-lg font-semibold mb-24">Pats: {pats}</p>
-      {isPatting && <Image src={pet} alt="stelle pfp" height={214} width={224} loading="eager" className="absolute mb-16" />}
-      <Image src={stelle} alt="stelle pfp" height={200} width={200} loading="eager" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="flex flex-col md:col-span-2 gap-2 justify-center items-center align-middle">
+          {isPatting && <Image src={pet} alt="stelle pfp" height={214} width={224} loading="eager" className="absolute mb-32" />}
+          <Image src={stelle} alt="stelle pfp" height={200} width={200} loading="eager" />
+        </div>
+        <div className="bg-gray-200 dark:bg-gray-800 p-2 rounded-xl flex flex-col gap-2 text-center">
+          <h1 className="text-xl font-semibold">Upgrades</h1>
+          <div className="flex gap-2 items-center">
+            <Image src={autoPet} alt="Auto petter" loading="eager" height={70} width={70} />
+            <div className="flex flex-col text-left">
+              <h2 className="text-lg">Auto Petter</h2>
+              <p>Owned: {autoPettersOwned}</p>
+            </div>
+          </div>
+          <div className="flex gap-2 items-center">
+            <Image src={catEars} alt="Cat ears" loading="eager" height={70} width={70} />
+            <div className="flex flex-col text-left">
+              <h2 className="text-lg">Cat Ears</h2>
+              <p>Owned: {catEarsOwned ? "Yes" : "No"}</p>
+            </div>
+          </div>
+          <p>Get upgrades from the <FontAwesomeIcon icon={faShop} /> Shop in the Menu!</p>
+        </div>
+      </div>
     </div>
   );
 }
