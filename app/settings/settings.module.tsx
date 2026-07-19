@@ -6,12 +6,16 @@ import { useEffect, useRef, useState } from "react";
 
 export default function SettingsMenu() {
   const router = useRouter();
+  const [ignoreKeyUp, setIgnoreKeyUp] = useState<boolean>(true);
   const [selection, setSelection] = useState<number>(0);
+  const ignoreUpRef = useRef<boolean>(ignoreKeyUp);
   const selRef = useRef<number>(selection);
   useEffect(() => { selRef.current = selection; }, [selection]);
+  useEffect(() => { ignoreUpRef.current = ignoreKeyUp }, [ignoreKeyUp]);
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.code !== "Space") return;
+      setIgnoreKeyUp(false);
       e.preventDefault();
       const timer = setTimeout(() => {
         switch (selRef.current) {
@@ -32,6 +36,10 @@ export default function SettingsMenu() {
     }
     const up = (e: KeyboardEvent) => {
       if (e.code !== "Space") return;
+      if (ignoreUpRef.current) {
+        setIgnoreKeyUp(false);
+        return;
+      }
       e.preventDefault();
       if (selRef.current >= 1) {
         setSelection(0);
@@ -44,6 +52,7 @@ export default function SettingsMenu() {
     return () => {
       removeEventListener("keydown", down);
       removeEventListener("keyup", up);
+      setIgnoreKeyUp(true);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

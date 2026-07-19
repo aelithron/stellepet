@@ -16,14 +16,20 @@ export default function ShopMenu() {
   const selRef = useRef<number>(selection);
   const patsRef = useRef<number | undefined>(pats);
   const autoPetRef = useRef<number>(autoPettersOwned);
+  const catEarsRef = useRef<boolean>(catEarsOwned);
   const [alertBox, setAlertBox] = useState<string | undefined>(undefined);
+  const [ignoreKeyUp, setIgnoreKeyUp] = useState<boolean>(true);
+  const ignoreUpRef = useRef<boolean>(ignoreKeyUp);
 
   useEffect(() => { selRef.current = selection; }, [selection]);
   useEffect(() => { autoPetRef.current = autoPettersOwned; }, [autoPettersOwned]);
+  useEffect(() => { catEarsRef.current = catEarsOwned; }, [catEarsOwned]);
   useEffect(() => { patsRef.current = pats; }, [pats]);
+  useEffect(() => { ignoreUpRef.current = ignoreKeyUp }, [ignoreKeyUp]);
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.code !== "Space") return;
+      setIgnoreKeyUp(false);
       e.preventDefault();
       const timer = setTimeout(() => {
         switch (selRef.current) {
@@ -33,29 +39,34 @@ export default function ShopMenu() {
           case 1:
             if (!patsRef.current || patsRef.current < 200) {
               setAlertBox(`You can't afford an Automatic Petter! (have ${patsRef.current ?? 0} pats, need 200)`);
+              setIgnoreKeyUp(true);
               setTimeout(() => setAlertBox(undefined), 2000);
               return;
             }
             setPats(patsRef.current - 200);
             localStorage.setItem("pats", `${patsRef.current - 200}`);
-            setAutoPettersOwned(autoPetRef.current + 1)
+            setAutoPettersOwned(autoPetRef.current + 1);
             localStorage.setItem("autoPetters", `${autoPetRef.current + 1}`);
+            setIgnoreKeyUp(true);
             break;
           case 2:
-            if (catEarsOwned) {
+            if (catEarsRef.current) {
               setAlertBox("You already own Cat Ears!");
               setTimeout(() => setAlertBox(undefined), 2000);
+              setIgnoreKeyUp(true);
               return;
             }
             if (!patsRef.current || patsRef.current < 2500) {
               setAlertBox(`You can't afford Cat Ears! (have ${patsRef.current ?? 0} pats, need 2500)`);
               setTimeout(() => setAlertBox(undefined), 2000);
+              setIgnoreKeyUp(true);
               return;
             }
             setPats(patsRef.current - 2500);
             localStorage.setItem("pats", `${patsRef.current - 2500}`);
             setCatEarsOwned(true);
             localStorage.setItem("catEars", "true");
+            setIgnoreKeyUp(true);
             break;
           default:
             return;
@@ -65,6 +76,10 @@ export default function ShopMenu() {
     }
     const up = (e: KeyboardEvent) => {
       if (e.code !== "Space") return;
+      if (ignoreUpRef.current) {
+        setIgnoreKeyUp(false);
+        return;
+      }
       e.preventDefault();
       if (selRef.current >= 2) {
         setSelection(0);
@@ -91,6 +106,7 @@ export default function ShopMenu() {
     return () => {
       removeEventListener("keydown", down);
       removeEventListener("keyup", up);
+      setIgnoreKeyUp(true);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
