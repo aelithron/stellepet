@@ -1,6 +1,6 @@
 "use client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faPencil, faRefresh } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faDownload, faPencil, faRefresh, faUpload } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { getKey } from "../key.module";
@@ -29,6 +29,20 @@ export default function SettingsMenu() {
             router.push("/settings/change");
             break;
           case 2:
+            const data = { pats: localStorage.getItem("pats") ?? "0", autoPetters: localStorage.getItem("autoPetters") ?? "0", catEars: localStorage.getItem("catEars") ?? "false" };
+            const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", `stellepet-export-${new Date().toISOString()}.json`);
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode?.removeChild(link);
+            URL.revokeObjectURL(url);
+            break;
+          case 3:
+            router.push("/settings/import");
+            break;
+          case 4:
             localStorage.setItem("pats", "0");
             localStorage.setItem("autoPetters", "0");
             localStorage.setItem("catEars", "false");
@@ -47,7 +61,7 @@ export default function SettingsMenu() {
         return;
       }
       e.preventDefault();
-      if (selRef.current >= 2) {
+      if (selRef.current >= 4) {
         setSelection(0);
         return;
       }
@@ -60,7 +74,7 @@ export default function SettingsMenu() {
       removeEventListener("keyup", up);
       setIgnoreKeyUp(true);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div className="grid grid-cols-3 gap-4">
@@ -71,11 +85,19 @@ export default function SettingsMenu() {
       <div className={`flex flex-col p-4 gap-1 text-xl items-center rounded-xl border-2 ${selection === 1 ? "border-black dark:border-white" : "border-gray-200 dark:border-gray-800"}`}>
         <FontAwesomeIcon icon={faPencil} size="2xl" />
         <p>Change Key</p>
-      </div>   
+      </div>
       <div className={`flex flex-col p-4 gap-1 text-xl items-center rounded-xl border-2 ${selection === 2 ? "border-black dark:border-white" : "border-gray-200 dark:border-gray-800"}`}>
+        <FontAwesomeIcon icon={faUpload} size="2xl" />
+        <p>Export</p>
+      </div>
+      <div className={`flex flex-col p-4 gap-1 text-xl items-center rounded-xl border-2 ${selection === 3 ? "border-black dark:border-white" : "border-gray-200 dark:border-gray-800"}`}>
+        <FontAwesomeIcon icon={faDownload} size="2xl" />
+        <p>Import</p>
+      </div>
+      <div className={`flex flex-col p-4 gap-1 text-xl items-center rounded-xl border-2 ${selection === 4 ? "border-black dark:border-white" : "border-gray-200 dark:border-gray-800"}`}>
         <FontAwesomeIcon icon={faRefresh} size="2xl" />
         <p>Reset</p>
-      </div>   
+      </div>
     </div>
   );
 }

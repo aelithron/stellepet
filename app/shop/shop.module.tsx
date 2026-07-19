@@ -40,14 +40,14 @@ export default function ShopMenu() {
             router.push("/menu");
             break;
           case 1:
-            if (!patsRef.current || patsRef.current < 200) {
-              setAlertBox(`You can't afford an Automatic Petter! (have ${patsRef.current ?? 0} pats, need 200)`);
+            if (!patsRef.current || patsRef.current < (200 + (autoPetRef.current * 200))) {
+              setAlertBox(`You can't afford an Automatic Petter! (have ${patsRef.current ?? 0} pats, need ${200 + (autoPetRef.current * 200)})`);
               setIgnoreKeyUp(true);
               setTimeout(() => setAlertBox(undefined), 2000);
               return;
             }
-            setPats(patsRef.current - 200);
-            localStorage.setItem("pats", `${patsRef.current - 200}`);
+            setPats(patsRef.current - (200 + (autoPetRef.current * 200)));
+            localStorage.setItem("pats", `${patsRef.current - (200 + (autoPetRef.current * 200))}`);
             setAutoPettersOwned(autoPetRef.current + 1);
             localStorage.setItem("autoPetters", `${autoPetRef.current + 1}`);
             setIgnoreKeyUp(true);
@@ -116,7 +116,7 @@ export default function ShopMenu() {
   if (pats === undefined) return (<h1 className="text-xl font-semibold">Loading...</h1>);
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-center text-xl font-semibold">Pats: {pats}</h1>
+      <h1 className="text-center text-xl font-semibold">Pats: {new Intl.NumberFormat().format(pats)}</h1>
       {alertBox && <p className="text-center border-red-500 border-2 p-2 rounded-xl">{alertBox}</p>}
       <div className="grid grid-cols-3 gap-4">
         <div className={`flex flex-col p-4 gap-1 text-xl items-center place-content-center h-full rounded-xl border-2 ${selection === 0 ? "border-black dark:border-white" : "border-gray-200 dark:border-gray-800"}`}>
@@ -127,7 +127,7 @@ export default function ShopMenu() {
           <Image src={autoPet} alt="Auto pet" loading="eager" height={70} width={70} />
           <p className="text-xl">Automatic Petter</p>
           <p>+1 Pat every 5 seconds</p>
-          <p>Cost: 200 Pats</p>
+          <p>Cost: {200 + (autoPettersOwned * 200)} Pats</p>
           <div className="flex gap-1 items-center">
             <p>Owned: {autoPettersOwned}</p>
             <p className="text-sm">(can buy multiple)</p>
@@ -137,7 +137,7 @@ export default function ShopMenu() {
           <Image src={catEars} alt="Cat ears" loading="eager" height={70} width={70} />
           <p className="text-xl">Cat Ears</p>
           <p>25% chance to double a pat</p>
-          <p>Cost: 2500 Pats</p>
+          <p>Cost: 1500 Pats</p>
           <p>Owned: {catEarsOwned ? "Yes" : "No"}</p>
         </div>
       </div>

@@ -86,7 +86,7 @@ export default function StellePet() {
   if (pats === undefined) return (<h1 className="text-xl font-semibold">Loading...</h1>);
   return (
     <div className="flex flex-col gap-2 justify-center items-center align-middle">
-      <p className="text-lg font-semibold mb-24">Pats: {pats}</p>
+      <p className="text-lg font-semibold mb-24">Pats: {new Intl.NumberFormat().format(pats)}</p>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="flex flex-col md:col-span-2 gap-2 justify-center items-center align-middle">
           {isPatting && <Image src={pet} alt="stelle pfp" height={214} width={224} loading="eager" className="absolute mb-32 z-10" />}

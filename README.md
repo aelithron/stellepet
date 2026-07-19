@@ -18,10 +18,10 @@ From there, the game loop is this:
 Items can only be purchased once unless otherwise noted!
 - Automatic Petter: Gain `+1 Pat` every five seconds. Price starts at 200 Pats, then goes up by 200 for each you have purchased.
   - You can purchase multiple Automatic Petters!
-- Cat Ears: Give Stelle cat ears, giving a 25% chance for a pat to double (giving +2 Pats instead of just +1). Price is 1500 Pats.
+- Cat Ears: Give Stelle cat ears, giving a 25% chance for a pat to double (giving +2 Pats instead of just +1). Only works on non-automatic pats. Price is 1500 Pats.
 ## Settings
 You can use the settings menu to change things :3
-- (coming soon) Change Key: Change the keyboard key that the game uses (it defaults to space)!
+- Change Key: Change the keyboard key that the game uses (it defaults to space)!
 - (coming soon) Export: Export your Pats and upgrades to a JSON file, you can then import it later.
 - (coming soon) Import: Import a previously exported save! This **overwrites** your existing data.
 - Reset: Reset your Pats and upgrades, setting you back to zero! This **CANNOT** be reversed unless you exported previously.
