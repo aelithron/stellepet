@@ -21,6 +21,7 @@ export default function ImportSave() {
       localStorage.setItem("autoPetters", res.autoPetters ?? "0");
       localStorage.setItem("catEars", res.catEars ?? "false");
       localStorage.setItem("skirt", res.skirt ?? "false");
+      localStorage.setItem("kittens", res.kittens ?? "0");
       router.push("/");
     }
     reader.readAsText(e.target.files[0]);

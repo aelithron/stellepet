@@ -32,8 +32,9 @@ export default function NavigationMenu() {
             router.push("/settings");
             break;
           default:
-            return;
+            break;
         }
+        setIgnoreKeyUp(true);
       }, 400)
       addEventListener("keyup", () => clearTimeout(timer), { once: true });
     }

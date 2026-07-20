@@ -29,6 +29,7 @@ export default function SettingsMenu() {
         switch (selRef.current) {
           case 0:
             router.push("/menu");
+            setIgnoreKeyUp(true);
             break;
           case 1:
             if (muteRef.current) {
@@ -42,9 +43,10 @@ export default function SettingsMenu() {
             break;
           case 2:
             router.push("/settings/change");
+            setIgnoreKeyUp(true);
             break;
           case 3:
-            const data = { pats: localStorage.getItem("pats") ?? "0", allTimePats: localStorage.getItem("allTimePats") ?? "0", autoPetters: localStorage.getItem("autoPetters") ?? "0", catEars: localStorage.getItem("catEars") ?? "false", skirt: localStorage.getItem("skirt") ?? "false" };
+            const data = { pats: localStorage.getItem("pats") ?? "0", allTimePats: localStorage.getItem("allTimePats") ?? "0", autoPetters: localStorage.getItem("autoPetters") ?? "0", catEars: localStorage.getItem("catEars") ?? "false", skirt: localStorage.getItem("skirt") ?? "false", kittens: localStorage.getItem("kittens") ?? "0" };
             const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }));
             const link = document.createElement("a");
             link.href = url;
@@ -53,9 +55,11 @@ export default function SettingsMenu() {
             link.click();
             link.parentNode?.removeChild(link);
             URL.revokeObjectURL(url);
+            setIgnoreKeyUp(true);
             break;
           case 4:
             router.push("/settings/import");
+            setIgnoreKeyUp(true);
             break;
           case 5:
             localStorage.setItem("pats", "0");
@@ -63,9 +67,11 @@ export default function SettingsMenu() {
             localStorage.setItem("autoPetters", "0");
             localStorage.setItem("catEars", "false");
             localStorage.setItem("skirt", "false");
+            localStorage.setItem("kittens", "0");
             localStorage.setItem("muted", "false");
             localStorage.setItem("key", " ");
             router.push("/");
+            setIgnoreKeyUp(true);
             break;
           default:
             return;

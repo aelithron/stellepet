@@ -7,6 +7,7 @@ import Image from "next/image";
 import autoPet from "@/public/shop/auto_pet.gif";
 import catEars from "@/public/shop/cat_ears.png";
 import skirt from "@/public/shop/skirt.png";
+import kitten from "@/public/shop/kitten.png";
 import { getKey } from "../key.module";
 
 export default function ShopMenu() {
@@ -17,11 +18,13 @@ export default function ShopMenu() {
   const [autoPettersOwned, setAutoPettersOwned] = useState<number>(0);
   const [catEarsOwned, setCatEarsOwned] = useState<boolean>(false);
   const [skirtOwned, setSkirtOwned] = useState<boolean>(false);
+  const [kittensOwned, setKittensOwned] = useState<number>(0);
   const selRef = useRef<number>(selection);
   const patsRef = useRef<number | undefined>(pats);
   const autoPetRef = useRef<number>(autoPettersOwned);
   const catEarsRef = useRef<boolean>(catEarsOwned);
   const skirtRef = useRef<boolean>(skirtOwned);
+  const kittensRef = useRef<number>(kittensOwned);
   const [alertBox, setAlertBox] = useState<string | undefined>(undefined);
   const [ignoreKeyUp, setIgnoreKeyUp] = useState<boolean>(true);
   const ignoreUpRef = useRef<boolean>(ignoreKeyUp);
@@ -31,12 +34,13 @@ export default function ShopMenu() {
   useEffect(() => { autoPetRef.current = autoPettersOwned; }, [autoPettersOwned]);
   useEffect(() => { catEarsRef.current = catEarsOwned; }, [catEarsOwned]);
   useEffect(() => { skirtRef.current = skirtOwned }, [skirtOwned]);
+  useEffect(() => { kittensRef.current = kittensOwned }, [kittensOwned]);
   useEffect(() => { patsRef.current = pats; }, [pats]);
   useEffect(() => { ignoreUpRef.current = ignoreKeyUp }, [ignoreKeyUp]);
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key !== key.current) return;
-      if (!e.repeat) setIgnoreKeyUp(false); 
+      if (!e.repeat) setIgnoreKeyUp(false);
       e.preventDefault();
       const timer = setTimeout(() => {
         switch (selRef.current) {
@@ -78,13 +82,13 @@ export default function ShopMenu() {
             break;
           case 3:
             if (skirtRef.current) {
-              setAlertBox("You already own Skirt!");
+              setAlertBox("You already own a Skirt!");
               setTimeout(() => setAlertBox(undefined), 2000);
               setIgnoreKeyUp(true);
               return;
             }
             if (!patsRef.current || patsRef.current < 5000) {
-              setAlertBox(`You can't afford Skirt! (have ${patsRef.current ?? 0} pats, need 5000)`);
+              setAlertBox(`You can't afford a Skirt! (have ${patsRef.current ?? 0} pats, need 5000)`);
               setTimeout(() => setAlertBox(undefined), 2000);
               setIgnoreKeyUp(true);
               return;
@@ -95,6 +99,24 @@ export default function ShopMenu() {
             localStorage.setItem("skirt", "true");
             setIgnoreKeyUp(true);
             break;
+          case 4:
+            if (!patsRef.current || patsRef.current < ((kittensRef.current + 1) * 5000)) {
+              setAlertBox(`You can't afford a Kitten! (have ${patsRef.current ?? 0} pats, need ${(kittensRef.current + 1) * 5000})`);
+              setIgnoreKeyUp(true);
+              setTimeout(() => setAlertBox(undefined), 2000);
+              return;
+            }
+            setPats(0);
+            localStorage.setItem("pats", "0");
+            setAutoPettersOwned(0);
+            localStorage.setItem("autoPetters", "0");
+            setCatEarsOwned(false);
+            localStorage.setItem("catEars", "false");
+            setSkirtOwned(false);
+            localStorage.setItem("skirt", "false");
+            setKittensOwned(kittensRef.current + 1);
+            localStorage.setItem("kittens", `${kittensRef.current + 1}`);
+            setIgnoreKeyUp(true);
           default:
             return;
         }
@@ -108,13 +130,13 @@ export default function ShopMenu() {
         return;
       }
       e.preventDefault();
-      if (selRef.current >= 3) {
+      if (selRef.current >= 4) {
         setSelection(0);
         return;
       }
       setSelection(selRef.current + 1);
     }
-    const storage = { pats: localStorage.getItem("pats"), catEars: (localStorage.getItem("catEars") === "true"), autoPetters: localStorage.getItem("autoPetters"), skirt: (localStorage.getItem("skirt") === "true") };
+    const storage = { pats: localStorage.getItem("pats"), catEars: (localStorage.getItem("catEars") === "true"), autoPetters: localStorage.getItem("autoPetters"), skirt: (localStorage.getItem("skirt") === "true"), kittens: localStorage.getItem("kittens") };
     if (storage.pats === null || isNaN(parseInt(storage.pats))) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setPats(0);
@@ -125,6 +147,11 @@ export default function ShopMenu() {
       setAutoPettersOwned(0);
     } else {
       setAutoPettersOwned(parseInt(storage.autoPetters));
+    }
+    if (storage.kittens === null || isNaN(parseInt(storage.kittens))) {
+      setKittensOwned(0);
+    } else {
+      setKittensOwned(parseInt(storage.kittens));
     }
     setCatEarsOwned(storage.catEars);
     setSkirtOwned(storage.skirt);
@@ -161,7 +188,7 @@ export default function ShopMenu() {
         <div className={`flex flex-col p-4 gap-1 items-center place-content-center rounded-xl border-2 ${selection === 2 ? "border-black dark:border-white" : "border-gray-200 dark:border-gray-800"}`}>
           <Image src={catEars} alt="Cat ears" loading="eager" height={70} width={70} />
           <p className="text-xl">Cat Ears</p>
-          <p>25% chance to double a pat</p>
+          <p>25% chance to get extra +1 Pat on manual pat</p>
           <p>Cost: 1500 Pats</p>
           <p>Owned: {catEarsOwned ? "Yes" : "No"}</p>
         </div>
@@ -174,6 +201,19 @@ export default function ShopMenu() {
           </div>
           <p>Cost: 5000 Pats</p>
           <p>Owned: {skirtOwned ? "Yes" : "No"}</p>
+        </div>
+        <div className={`flex flex-col p-4 gap-1 items-center place-content-center rounded-xl border-2 ${selection === 4 ? "border-black dark:border-white" : "border-gray-200 dark:border-gray-800"}`}>
+          <Image src={kitten} alt="Kitten" loading="eager" height={70} width={70} />
+          <p className="text-xl">Kitten</p>
+          <div className="flex flex-col items-center mb-1">
+             <p>Reset all of your upgrades and Pats,</p>
+            <p>get +1 Pat on all future pats</p>
+          </div>
+          <p>Cost: {(kittensOwned + 1) * 5000}+ Pats, any upgrades</p>
+          <div className="flex gap-1 items-center">
+            <p>Owned: {kittensOwned}</p>
+            <p className="text-sm">(can buy multiple)</p>
+          </div>
         </div>
       </div>
     </div>

@@ -73,11 +73,6 @@ export default function StellePet() {
     } else {
       setPats(parseInt(storage.pats));
     }
-    if (storage.allTime === null || isNaN(parseInt(storage.allTime))) {
-      setAllTimePats(parseInt(storage.pats ?? "0"));
-    } else {
-      setAllTimePats(parseInt(storage.allTime));
-    }
     if (storage.autoPetters === null || isNaN(parseInt(storage.autoPetters))) {
       setAutoPettersOwned(0);
     } else {
@@ -85,6 +80,20 @@ export default function StellePet() {
     }
     setCatEarsOwned(storage.catEars);
     setSkirtOwned(storage.skirt);
+    if (storage.allTime === null || isNaN(parseInt(storage.allTime))) {
+      let spentPats = 0;
+      if (parseInt(storage.autoPetters ?? "0") >= 1) {
+        for (let i = 0; i < parseInt(storage.autoPetters ?? "0"); i++) {
+          spentPats = spentPats + ((i * 150) + 200);
+          console.log(i);
+        }
+      }
+      if (storage.catEars) spentPats = spentPats + 1500;
+      if (storage.skirt) spentPats = spentPats + 5000;
+      setAllTimePats(parseInt(storage.pats ?? "0") + spentPats);
+    } else {
+      setAllTimePats(parseInt(storage.allTime));
+    }
     setMuted(storage.muted);
     let autoPetDelay = 5000;
     if (storage.skirt) autoPetDelay = 3000;
