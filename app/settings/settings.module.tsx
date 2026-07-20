@@ -101,7 +101,7 @@ export default function SettingsMenu() {
       </div>
       <div className={`flex flex-col p-4 gap-1 text-xl items-center rounded-xl border-2 ${selection === 1 ? "border-black dark:border-white" : "border-gray-200 dark:border-gray-800"}`}>
         <FontAwesomeIcon icon={muted ? faVolume : faVolumeMute} size="2xl" />
-        <p>{muted ? "Unmute" : "Mute"}</p>
+        <p>{muted ? "Unmute" : "Mute"} SFX</p>
       </div>
       <div className={`flex flex-col p-4 gap-1 text-xl items-center rounded-xl border-2 ${selection === 2 ? "border-black dark:border-white" : "border-gray-200 dark:border-gray-800"}`}>
         <FontAwesomeIcon icon={faPencil} size="2xl" />

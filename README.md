@@ -16,10 +16,11 @@ From there, the game loop is this:
 - Keep giving Stelle headpats to earn more Pats and buy more upgrades!
 ## Shop Items
 Items can only be purchased once unless otherwise noted!
-- Automatic Petter: Gain `+1 Pat` every five seconds. Price starts at 200 Pats, then goes up by 200 for each you have purchased.
+- Automatic Petter: Gain `+1 Pat` every five seconds. Price starts at 200 Pats, then goes up by 150 Pats for each you have purchased.
   - You can purchase multiple Automatic Petters!
 - Cat Ears: Give Stelle cat ears, giving a 25% chance for a pat to double (giving +2 Pats instead of just +1). Only works on non-automatic pats. Price is 1500 Pats.
   - This also increases the chance of a pat causing a meow from 10% to 15%!
+- Skirt: Increase the speed of Automatic Petters to `+1 Pat` every three seconds (instead of five).
 ## Settings
 You can use the settings menu to change things :3
 - Mute SFX: Prevent sound effects from being played.

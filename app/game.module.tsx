@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faShop } from "@fortawesome/free-solid-svg-icons";
 import autoPet from "@/public/shop/auto_pet.gif";
 import catEars from "@/public/shop/cat_ears.png";
+import skirt from "@/public/shop/skirt.png";
 import { getKey } from "./key.module";
 
 export default function StellePet() {
@@ -18,6 +19,7 @@ export default function StellePet() {
   const [catEarsOwned, setCatEarsOwned] = useState<boolean>(false);
   const [autoPettersOwned, setAutoPettersOwned] = useState<number>(0);
   const [catEarsWorked, setCatEarsWorked] = useState<boolean>(false);
+  const [skirtOwned, setSkirtOwned] = useState<boolean>(false);
   const [autoPettersWorked, setAutoPettersWorked] = useState<boolean>(false);
   const [muted, setMuted] = useState<boolean>(false);
   const clearLast = useRef<NodeJS.Timeout | undefined>(undefined);
@@ -48,7 +50,7 @@ export default function StellePet() {
   useEffect(() => { autoPettersOwnedRef.current = autoPettersOwned }, [autoPettersOwned]);
   useEffect(() => { muteRef.current = muted }, [muted]);
   useEffect(() => {
-    const storage = { pats: localStorage.getItem("pats"), catEars: (localStorage.getItem("catEars") === "true"), autoPetters: localStorage.getItem("autoPetters"), muted: (localStorage.getItem("muted") === "true") };
+    const storage = { pats: localStorage.getItem("pats"), catEars: (localStorage.getItem("catEars") === "true"), autoPetters: localStorage.getItem("autoPetters"), skirt: (localStorage.getItem("skirt") === "true"), muted: (localStorage.getItem("muted") === "true") };
     const down = (e: KeyboardEvent) => {
       if (e.key !== key.current) return;
       e.preventDefault();
@@ -74,14 +76,17 @@ export default function StellePet() {
       setAutoPettersOwned(parseInt(storage.autoPetters));
     }
     setCatEarsOwned(storage.catEars);
+    setSkirtOwned(storage.skirt);
     setMuted(storage.muted);
+    let autoPetDelay = 5000;
+    if (storage.skirt) autoPetDelay = 3000;
     clearAutoPetter.current = setInterval(() => {
       if (autoPettersOwnedRef.current === 0) return;
       setPats((cur) => (cur ?? 0) + autoPettersOwnedRef.current);
       setAutoPettersWorked(true);
       //new Audio("/sfx/meow.wav").play();
       setTimeout(() => setAutoPettersWorked(false), 1500);
-    }, 5000);
+    }, autoPetDelay);
     return () => {
       if (clearAutoPetter.current) clearInterval(clearAutoPetter.current);
       removeEventListener("keydown", down);
@@ -98,6 +103,7 @@ export default function StellePet() {
           {isPatting && <Image src={pet} alt="stelle pfp" height={214} width={224} loading="eager" className="absolute mb-32 z-10" />}
           {catEarsOwned && <Image src={catEars} alt="Cat ears" loading="eager" height={200} width={200} className="absolute mb-25 z-5" />}
           <Image src={stelle} alt="stelle pfp" height={200} width={200} loading="eager" />
+          {skirtOwned && <Image src={skirt} alt="Cat ears" loading="eager" className="absolute mt-75 z-5 object-bottom object-cover h-[100] w-[200]" />}
         </div>
         <div className="bg-gray-200 dark:bg-gray-800 p-2 rounded-xl flex flex-col gap-2 text-center">
           <h1 className="text-xl font-semibold">Upgrades</h1>
@@ -113,6 +119,13 @@ export default function StellePet() {
             <div className={`flex flex-col text-left ${catEarsWorked ? "text-green-600 dark:text-green-300" : ""}`}>
               <h2 className="text-lg">Cat Ears</h2>
               <p>Owned: {catEarsOwned ? "Yes" : "No"}</p>
+            </div>
+          </div>
+          <div className="flex gap-2 items-center">
+            <Image src={skirt} alt="Skirt" loading="eager" height={70} width={70} />
+            <div className={`flex flex-col text-left ${(autoPettersWorked && skirtOwned) ? "text-green-600 dark:text-green-300" : ""}`}>
+              <h2 className="text-lg">Skirt</h2>
+              <p>Owned: {skirtOwned ? "Yes" : "No"}</p>
             </div>
           </div>
           <div className="text-balance"><p>Get upgrades from the</p> <p className="inline-block"><FontAwesomeIcon icon={faShop} /> Shop</p> in the <p className="inline-block"><FontAwesomeIcon icon={faBars} /> Menu</p>!</div>

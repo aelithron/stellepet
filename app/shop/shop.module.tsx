@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import autoPet from "@/public/shop/auto_pet.gif";
 import catEars from "@/public/shop/cat_ears.png";
+import skirt from "@/public/shop/skirt.png";
 import { getKey } from "../key.module";
 
 export default function ShopMenu() {
@@ -15,10 +16,12 @@ export default function ShopMenu() {
   const [pats, setPats] = useState<number | undefined>(undefined);
   const [autoPettersOwned, setAutoPettersOwned] = useState<number>(0);
   const [catEarsOwned, setCatEarsOwned] = useState<boolean>(false);
+  const [skirtOwned, setSkirtOwned] = useState<boolean>(false);
   const selRef = useRef<number>(selection);
   const patsRef = useRef<number | undefined>(pats);
   const autoPetRef = useRef<number>(autoPettersOwned);
   const catEarsRef = useRef<boolean>(catEarsOwned);
+  const skirtRef = useRef<boolean>(skirtOwned);
   const [alertBox, setAlertBox] = useState<string | undefined>(undefined);
   const [ignoreKeyUp, setIgnoreKeyUp] = useState<boolean>(true);
   const ignoreUpRef = useRef<boolean>(ignoreKeyUp);
@@ -27,6 +30,7 @@ export default function ShopMenu() {
   useEffect(() => { selRef.current = selection; }, [selection]);
   useEffect(() => { autoPetRef.current = autoPettersOwned; }, [autoPettersOwned]);
   useEffect(() => { catEarsRef.current = catEarsOwned; }, [catEarsOwned]);
+  useEffect(() => { skirtRef.current = skirtOwned }, [skirtOwned]);
   useEffect(() => { patsRef.current = pats; }, [pats]);
   useEffect(() => { ignoreUpRef.current = ignoreKeyUp }, [ignoreKeyUp]);
   useEffect(() => {
@@ -72,6 +76,25 @@ export default function ShopMenu() {
             localStorage.setItem("catEars", "true");
             setIgnoreKeyUp(true);
             break;
+          case 3:
+            if (skirtRef.current) {
+              setAlertBox("You already own Skirt!");
+              setTimeout(() => setAlertBox(undefined), 2000);
+              setIgnoreKeyUp(true);
+              return;
+            }
+            if (!patsRef.current || patsRef.current < 5000) {
+              setAlertBox(`You can't afford Skirt! (have ${patsRef.current ?? 0} pats, need 5000)`);
+              setTimeout(() => setAlertBox(undefined), 2000);
+              setIgnoreKeyUp(true);
+              return;
+            }
+            setPats(patsRef.current - 5000);
+            localStorage.setItem("pats", `${patsRef.current - 5000}`);
+            setSkirtOwned(true);
+            localStorage.setItem("skirt", "true");
+            setIgnoreKeyUp(true);
+            break;
           default:
             return;
         }
@@ -85,13 +108,13 @@ export default function ShopMenu() {
         return;
       }
       e.preventDefault();
-      if (selRef.current >= 2) {
+      if (selRef.current >= 3) {
         setSelection(0);
         return;
       }
       setSelection(selRef.current + 1);
     }
-    const storage = { pats: localStorage.getItem("pats"), catEars: (localStorage.getItem("catEars") === "true"), autoPetters: localStorage.getItem("autoPetters") };
+    const storage = { pats: localStorage.getItem("pats"), catEars: (localStorage.getItem("catEars") === "true"), autoPetters: localStorage.getItem("autoPetters"), skirt: (localStorage.getItem("skirt") === "true") };
     if (storage.pats === null || isNaN(parseInt(storage.pats))) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setPats(0);
@@ -104,6 +127,7 @@ export default function ShopMenu() {
       setAutoPettersOwned(parseInt(storage.autoPetters));
     }
     setCatEarsOwned(storage.catEars);
+    setSkirtOwned(storage.skirt);
 
     addEventListener("keydown", down);
     addEventListener("keyup", up);
@@ -127,7 +151,7 @@ export default function ShopMenu() {
         <div className={`flex flex-col p-4 gap-1 items-center place-content-center rounded-xl border-2 ${selection === 1 ? "border-black dark:border-white" : "border-gray-200 dark:border-gray-800"}`}>
           <Image src={autoPet} alt="Auto pet" loading="eager" height={70} width={70} />
           <p className="text-xl">Automatic Petter</p>
-          <p>+1 Pat every 5 seconds</p>
+          <p className="flex gap-1">+1 Pat every {skirtOwned ? <p><s>5</s> 3</p> : "5"} seconds</p>
           <p>Cost: {200 + (autoPettersOwned * 150)} Pats</p>
           <div className="flex gap-1 items-center">
             <p>Owned: {autoPettersOwned}</p>
@@ -140,6 +164,16 @@ export default function ShopMenu() {
           <p>25% chance to double a pat</p>
           <p>Cost: 1500 Pats</p>
           <p>Owned: {catEarsOwned ? "Yes" : "No"}</p>
+        </div>
+        <div className={`flex flex-col p-4 gap-1 items-center place-content-center rounded-xl border-2 ${selection === 3 ? "border-black dark:border-white" : "border-gray-200 dark:border-gray-800"}`}>
+          <Image src={skirt} alt="Skirt" loading="eager" height={70} width={70} />
+          <p className="text-xl">Skirt</p>
+          <div className="flex flex-col items-center mb-1">
+            <p>Speed Automatic Petters up</p>
+            <p>to +1 Pat every 3 seconds</p>
+          </div>
+          <p>Cost: 5000 Pats</p>
+          <p>Owned: {skirtOwned ? "Yes" : "No"}</p>
         </div>
       </div>
     </div>
