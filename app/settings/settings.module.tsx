@@ -44,7 +44,7 @@ export default function SettingsMenu() {
             router.push("/settings/change");
             break;
           case 3:
-            const data = { pats: localStorage.getItem("pats") ?? "0", autoPetters: localStorage.getItem("autoPetters") ?? "0", catEars: localStorage.getItem("catEars") ?? "false" };
+            const data = { pats: localStorage.getItem("pats") ?? "0", allTimePats: localStorage.getItem("allTimePats") ?? "0", autoPetters: localStorage.getItem("autoPetters") ?? "0", catEars: localStorage.getItem("catEars") ?? "false", skirt: localStorage.getItem("skirt") ?? "false" };
             const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }));
             const link = document.createElement("a");
             link.href = url;
@@ -59,8 +59,10 @@ export default function SettingsMenu() {
             break;
           case 5:
             localStorage.setItem("pats", "0");
+            localStorage.setItem("allTimePats", "0");
             localStorage.setItem("autoPetters", "0");
             localStorage.setItem("catEars", "false");
+            localStorage.setItem("skirt", "false");
             localStorage.setItem("muted", "false");
             localStorage.setItem("key", " ");
             router.push("/");

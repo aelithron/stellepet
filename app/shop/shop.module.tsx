@@ -151,7 +151,7 @@ export default function ShopMenu() {
         <div className={`flex flex-col p-4 gap-1 items-center place-content-center rounded-xl border-2 ${selection === 1 ? "border-black dark:border-white" : "border-gray-200 dark:border-gray-800"}`}>
           <Image src={autoPet} alt="Auto pet" loading="eager" height={70} width={70} />
           <p className="text-xl">Automatic Petter</p>
-          <p className="flex gap-1">+1 Pat every {skirtOwned ? <p><s>5</s> 3</p> : "5"} seconds</p>
+          <p className="flex gap-1">+1 Pat every {skirtOwned ? <><s>5</s> 3</> : "5"} seconds</p>
           <p>Cost: {200 + (autoPettersOwned * 150)} Pats</p>
           <div className="flex gap-1 items-center">
             <p>Owned: {autoPettersOwned}</p>

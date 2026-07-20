@@ -16,9 +16,11 @@ export default function ImportSave() {
       if (!e.target || !e.target.result) return;
       const res = JSON.parse(e.target.result.toString());
       if (!res || !res.pats || !res.autoPetters || !res.catEars) return;
-      localStorage.setItem("pats", res.pats);
-      localStorage.setItem("autoPetters", res.autoPetters);
-      localStorage.setItem("catEars", res.catEars);
+      localStorage.setItem("pats", res.pats ?? "0");
+      localStorage.setItem("allTimePats", res.allTimePats ?? "0");
+      localStorage.setItem("autoPetters", res.autoPetters ?? "0");
+      localStorage.setItem("catEars", res.catEars ?? "false");
+      localStorage.setItem("skirt", res.skirt ?? "false");
       router.push("/");
     }
     reader.readAsText(e.target.files[0]);
