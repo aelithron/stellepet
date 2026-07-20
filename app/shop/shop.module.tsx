@@ -87,14 +87,14 @@ export default function ShopMenu() {
               setIgnoreKeyUp(true);
               return;
             }
-            if (!patsRef.current || patsRef.current < 5000) {
-              setAlertBox(`You can't afford a Skirt! (have ${patsRef.current ?? 0} pats, need 5000)`);
+            if (!patsRef.current || patsRef.current < 4000) {
+              setAlertBox(`You can't afford a Skirt! (have ${patsRef.current ?? 0} pats, need 4000)`);
               setTimeout(() => setAlertBox(undefined), 2000);
               setIgnoreKeyUp(true);
               return;
             }
-            setPats(patsRef.current - 5000);
-            localStorage.setItem("pats", `${patsRef.current - 5000}`);
+            setPats(patsRef.current - 4000);
+            localStorage.setItem("pats", `${patsRef.current - 4000}`);
             setSkirtOwned(true);
             localStorage.setItem("skirt", "true");
             setIgnoreKeyUp(true);
@@ -199,7 +199,7 @@ export default function ShopMenu() {
             <p>Speed Automatic Petters up</p>
             <p>to +1 Pat every 3 seconds</p>
           </div>
-          <p>Cost: 5000 Pats</p>
+          <p>Cost: 4000 Pats</p>
           <p>Owned: {skirtOwned ? "Yes" : "No"}</p>
         </div>
         <div className={`flex flex-col p-4 gap-1 items-center place-content-center rounded-xl border-2 ${selection === 4 ? "border-black dark:border-white" : "border-gray-200 dark:border-gray-800"}`}>

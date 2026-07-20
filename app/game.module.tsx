@@ -9,6 +9,7 @@ import { faBars, faShop } from "@fortawesome/free-solid-svg-icons";
 import autoPet from "@/public/shop/auto_pet.gif";
 import catEars from "@/public/shop/cat_ears.png";
 import skirt from "@/public/shop/skirt.png";
+import kitten from "@/public/shop/kitten.png";
 import { getKey } from "./key.module";
 
 export default function StellePet() {
@@ -21,20 +22,22 @@ export default function StellePet() {
   const [autoPettersOwned, setAutoPettersOwned] = useState<number>(0);
   const [catEarsWorked, setCatEarsWorked] = useState<boolean>(false);
   const [skirtOwned, setSkirtOwned] = useState<boolean>(false);
+  const [kittensOwned, setKittensOwned] = useState<number>(0);
   const [autoPettersWorked, setAutoPettersWorked] = useState<boolean>(false);
   const [muted, setMuted] = useState<boolean>(false);
   const clearLast = useRef<NodeJS.Timeout | undefined>(undefined);
   const clearAutoPetter = useRef<NodeJS.Timeout | undefined>(undefined);
   const catEarsOwnedRef = useRef<boolean>(catEarsOwned);
   const autoPettersOwnedRef = useRef<number>(autoPettersOwned);
+  const kittensOwnedRef = useRef<number>(kittensOwned);
   const muteRef = useRef<boolean>(muted);
   function addPat() {
     if (isPatting) return;
     if (clearLast.current) clearTimeout(clearLast.current);
     setIsPatting(true);
-    let add = 1;
+    let add = (kittensOwnedRef.current + 1);
     if (catEarsOwnedRef.current && Math.random() <= 0.25) {
-      add = 2;
+      add = add + 1;
       setCatEarsWorked(true);
       setTimeout(() => setCatEarsWorked(false), 1500);
     }
@@ -51,9 +54,10 @@ export default function StellePet() {
   useEffect(() => { key.current = getKey(); }, []);
   useEffect(() => { catEarsOwnedRef.current = catEarsOwned }, [catEarsOwned]);
   useEffect(() => { autoPettersOwnedRef.current = autoPettersOwned }, [autoPettersOwned]);
+  useEffect(() => { kittensOwnedRef.current = kittensOwned }, [kittensOwned]);
   useEffect(() => { muteRef.current = muted }, [muted]);
   useEffect(() => {
-    const storage = { pats: localStorage.getItem("pats"), allTime: localStorage.getItem("allTimePats"), catEars: (localStorage.getItem("catEars") === "true"), autoPetters: localStorage.getItem("autoPetters"), skirt: (localStorage.getItem("skirt") === "true"), muted: (localStorage.getItem("muted") === "true") };
+    const storage = { pats: localStorage.getItem("pats"), allTime: localStorage.getItem("allTimePats"), catEars: (localStorage.getItem("catEars") === "true"), autoPetters: localStorage.getItem("autoPetters"), skirt: (localStorage.getItem("skirt") === "true"), kittens: localStorage.getItem("kittens"), muted: (localStorage.getItem("muted") === "true") };
     const down = (e: KeyboardEvent) => {
       if (e.key !== key.current) return;
       e.preventDefault();
@@ -80,16 +84,17 @@ export default function StellePet() {
     }
     setCatEarsOwned(storage.catEars);
     setSkirtOwned(storage.skirt);
+    if (storage.kittens === null || isNaN(parseInt(storage.kittens))) {
+      setKittensOwned(0);
+    } else {
+      setKittensOwned(parseInt(storage.kittens));
+    }
     if (storage.allTime === null || isNaN(parseInt(storage.allTime))) {
       let spentPats = 0;
-      if (parseInt(storage.autoPetters ?? "0") >= 1) {
-        for (let i = 0; i < parseInt(storage.autoPetters ?? "0"); i++) {
-          spentPats = spentPats + ((i * 150) + 200);
-          console.log(i);
-        }
-      }
+      if (parseInt(storage.autoPetters ?? "0") >= 1) for (let i = 0; i < parseInt(storage.autoPetters ?? "0"); i++) spentPats = spentPats + ((i * 150) + 200);
       if (storage.catEars) spentPats = spentPats + 1500;
-      if (storage.skirt) spentPats = spentPats + 5000;
+      if (storage.skirt) spentPats = spentPats + 4000;
+      if (parseInt(storage.kittens ?? "0") >= 1) for (let i = 0; i < parseInt(storage.kittens ?? "0"); i++) spentPats = spentPats + ((i + 1) * 5000);
       setAllTimePats(parseInt(storage.pats ?? "0") + spentPats);
     } else {
       setAllTimePats(parseInt(storage.allTime));
@@ -99,8 +104,8 @@ export default function StellePet() {
     if (storage.skirt) autoPetDelay = 3000;
     clearAutoPetter.current = setInterval(() => {
       if (autoPettersOwnedRef.current === 0) return;
-      setPats((cur) => (cur ?? 0) + autoPettersOwnedRef.current);
-      setAllTimePats((cur) => (cur ?? 0) + autoPettersOwnedRef.current);
+      setPats((cur) => (cur ?? 0) + (autoPettersOwnedRef.current * (kittensOwnedRef.current + 1)));
+      setAllTimePats((cur) => (cur ?? 0) + (autoPettersOwnedRef.current * (kittensOwnedRef.current + 1)));
       setAutoPettersWorked(true);
       //new Audio("/sfx/meow.wav").play();
       setTimeout(() => setAutoPettersWorked(false), 1500);
@@ -145,6 +150,13 @@ export default function StellePet() {
               <div className={`flex flex-col text-left ${(autoPettersWorked && skirtOwned) ? "text-green-600 dark:text-green-300" : ""}`}>
                 <h2 className="text-lg">Skirt</h2>
                 <p>Owned: {skirtOwned ? "Yes" : "No"}</p>
+              </div>
+            </div>
+            <div className="flex gap-2 items-center">
+              <Image src={kitten} alt="Kitten" loading="eager" height={70} width={70} />
+              <div className="flex flex-col text-left">
+                <h2 className="text-lg">Kitten</h2>
+                <p>Owned: {kittensOwned}</p>
               </div>
             </div>
             <div className="text-balance"><p>Get upgrades from the</p> <p className="inline-block"><FontAwesomeIcon icon={faShop} /> Shop</p> in the <p className="inline-block"><FontAwesomeIcon icon={faBars} /> Menu</p>!</div>
