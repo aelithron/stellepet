@@ -27,10 +27,11 @@ You can use the settings menu to change things :3
 - Change Key: Change the keyboard key that the game uses (it defaults to space)!
 - Export: Export your Pats and upgrades to a JSON file, you can then import it later.
 - Import: Import a previously exported save! This **overwrites** your existing data.
-- Reset: Reset your Pats and upgrades, setting you back to zero! This **CANNOT** be reversed unless you exported previously.
+- Reset: Reset your Pats, upgrades, and settings, putting you back at zero! This **CANNOT** be reversed unless you exported previously.
 ## Fun things
 - There's a 10% chance on each human pat (not automated petter) for Stelle to meow! Stelle sent me this audio clip :3
   - The chance goes up to 15% if you have purchased cat ears in the shop!
+- There's a counter that tracks your all time pats, so you can still show that off after spending a lot in the shop!
 ## Self-hosting
 I heavily suggest using Docker to self-host stellepet, it's just the simplest method!
 ### With Docker Compose
