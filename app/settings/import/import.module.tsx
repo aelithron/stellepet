@@ -1,10 +1,12 @@
 "use client";
 import Key, { getKey } from "@/app/key.module";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, useEffect, useRef } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 
 export default function ImportSave() {
   const router = useRouter();
+  const [ignoreKeyDown, setIgnoreKeyDown] = useState<boolean>(true);
+  const ignoreDownRef = useRef<boolean>(ignoreKeyDown);
   const key = useRef<string | null>(null);
   function readFile(e: ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
@@ -22,14 +24,21 @@ export default function ImportSave() {
     reader.readAsText(e.target.files[0]);
   }
   useEffect(() => { key.current = getKey(); }, []);
+  useEffect(() => { ignoreDownRef.current = ignoreKeyDown }, [ignoreKeyDown]);
   useEffect(() => {
     function down(e: KeyboardEvent) {
       if (e.key === key.current) {
+        if (ignoreDownRef.current) {
+          setIgnoreKeyDown(false);
+          return;
+        }
+        setIgnoreKeyDown(false);
         e.preventDefault();
         router.push("/settings");
         return;
       }
     }
+    setTimeout(() => setIgnoreKeyDown(false), 1000);
     addEventListener("keydown", down);
     return () => { removeEventListener("keydown", down); }
   // eslint-disable-next-line react-hooks/exhaustive-deps

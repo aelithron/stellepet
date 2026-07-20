@@ -40,14 +40,15 @@ export default function ShopMenu() {
             router.push("/menu");
             break;
           case 1:
-            if (!patsRef.current || patsRef.current < (200 + (autoPetRef.current * 200))) {
-              setAlertBox(`You can't afford an Automatic Petter! (have ${patsRef.current ?? 0} pats, need ${200 + (autoPetRef.current * 200)})`);
+            const price = (200 + (autoPetRef.current * 150));
+            if (!patsRef.current || patsRef.current < price) {
+              setAlertBox(`You can't afford an Automatic Petter! (have ${patsRef.current ?? 0} pats, need ${price})`);
               setIgnoreKeyUp(true);
               setTimeout(() => setAlertBox(undefined), 2000);
               return;
             }
-            setPats(patsRef.current - (200 + (autoPetRef.current * 200)));
-            localStorage.setItem("pats", `${patsRef.current - (200 + (autoPetRef.current * 200))}`);
+            setPats(patsRef.current - price);
+            localStorage.setItem("pats", `${patsRef.current - price}`);
             setAutoPettersOwned(autoPetRef.current + 1);
             localStorage.setItem("autoPetters", `${autoPetRef.current + 1}`);
             setIgnoreKeyUp(true);
@@ -127,7 +128,7 @@ export default function ShopMenu() {
           <Image src={autoPet} alt="Auto pet" loading="eager" height={70} width={70} />
           <p className="text-xl">Automatic Petter</p>
           <p>+1 Pat every 5 seconds</p>
-          <p>Cost: {200 + (autoPettersOwned * 200)} Pats</p>
+          <p>Cost: {200 + (autoPettersOwned * 150)} Pats</p>
           <div className="flex gap-1 items-center">
             <p>Owned: {autoPettersOwned}</p>
             <p className="text-sm">(can buy multiple)</p>

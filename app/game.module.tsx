@@ -19,10 +19,12 @@ export default function StellePet() {
   const [autoPettersOwned, setAutoPettersOwned] = useState<number>(0);
   const [catEarsWorked, setCatEarsWorked] = useState<boolean>(false);
   const [autoPettersWorked, setAutoPettersWorked] = useState<boolean>(false);
+  const [muted, setMuted] = useState<boolean>(false);
   const clearLast = useRef<NodeJS.Timeout | undefined>(undefined);
   const clearAutoPetter = useRef<NodeJS.Timeout | undefined>(undefined);
   const catEarsOwnedRef = useRef<boolean>(catEarsOwned);
   const autoPettersOwnedRef = useRef<number>(autoPettersOwned);
+  const muteRef = useRef<boolean>(muted);
   function addPat() {
     if (isPatting) return;
     if (clearLast.current) clearTimeout(clearLast.current);
@@ -34,6 +36,7 @@ export default function StellePet() {
       setTimeout(() => setCatEarsWorked(false), 1500);
     }
     setPats((prev) => (prev ?? 0) + add);
+    if (!muteRef.current && ((!catEarsOwnedRef.current && Math.random() <= 0.1) || (catEarsOwnedRef.current && Math.random() <= 0.15))) new Audio("/sfx/meow.wav").play();
     clearLast.current = setTimeout(() => setIsPatting(false), 400);
   }
   useEffect(() => {
@@ -43,8 +46,9 @@ export default function StellePet() {
   useEffect(() => { key.current = getKey(); }, []);
   useEffect(() => { catEarsOwnedRef.current = catEarsOwned }, [catEarsOwned]);
   useEffect(() => { autoPettersOwnedRef.current = autoPettersOwned }, [autoPettersOwned]);
+  useEffect(() => { muteRef.current = muted }, [muted]);
   useEffect(() => {
-    const storage = { pats: localStorage.getItem("pats"), catEars: (localStorage.getItem("catEars") === "true"), autoPetters: localStorage.getItem("autoPetters") };
+    const storage = { pats: localStorage.getItem("pats"), catEars: (localStorage.getItem("catEars") === "true"), autoPetters: localStorage.getItem("autoPetters"), muted: (localStorage.getItem("muted") === "true") };
     const down = (e: KeyboardEvent) => {
       if (e.key !== key.current) return;
       e.preventDefault();
@@ -70,10 +74,12 @@ export default function StellePet() {
       setAutoPettersOwned(parseInt(storage.autoPetters));
     }
     setCatEarsOwned(storage.catEars);
+    setMuted(storage.muted);
     clearAutoPetter.current = setInterval(() => {
       if (autoPettersOwnedRef.current === 0) return;
       setPats((cur) => (cur ?? 0) + autoPettersOwnedRef.current);
       setAutoPettersWorked(true);
+      //new Audio("/sfx/meow.wav").play();
       setTimeout(() => setAutoPettersWorked(false), 1500);
     }, 5000);
     return () => {
