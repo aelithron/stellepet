@@ -32,7 +32,7 @@ export default function ImportSave() {
           setIgnoreKeyDown(false);
           return;
         }
-        setIgnoreKeyDown(false);
+        if (!e.repeat) setIgnoreKeyDown(false);
         e.preventDefault();
         router.push("/settings");
         return;

@@ -19,7 +19,7 @@ export default function NavigationMenu() {
     const down = (e: KeyboardEvent) => {
       if (e.key !== key.current) return;
       e.preventDefault();
-      setIgnoreKeyUp(false);
+      if (!e.repeat) setIgnoreKeyUp(false);
       const timer = setTimeout(() => {
         switch (selRef.current) {
           case "back":

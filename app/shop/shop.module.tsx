@@ -32,7 +32,7 @@ export default function ShopMenu() {
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key !== key.current) return;
-      setIgnoreKeyUp(false);
+      if (!e.repeat) setIgnoreKeyUp(false); 
       e.preventDefault();
       const timer = setTimeout(() => {
         switch (selRef.current) {

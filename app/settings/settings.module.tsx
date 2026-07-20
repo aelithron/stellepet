@@ -61,6 +61,8 @@ export default function SettingsMenu() {
             localStorage.setItem("pats", "0");
             localStorage.setItem("autoPetters", "0");
             localStorage.setItem("catEars", "false");
+            localStorage.setItem("muted", "false");
+            localStorage.setItem("key", " ");
             router.push("/");
             break;
           default:

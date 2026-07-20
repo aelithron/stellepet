@@ -41,7 +41,7 @@ export default function ChangeKey() {
         <p>Alternatively, press <code>{key !== " " ? key : "Space"}</code> to go back.</p>
       </div>}
       {newKey && <div className="flex flex-col gap-2 text-center">
-        <p>Are you sure you want to change your key from <code>{key}</code> to <code>{newKey !== " " ? newKey : "Space"}</code>?</p>
+        <p>Are you sure you want to change your key from <code>{key !== " " ? key : "Space"}</code> to <code>{newKey !== " " ? newKey : "Space"}</code>?</p>
         <p>Press <code>{newKey !== " " ? newKey : "Space"}</code> again to confirm this change, or <code>{key !== " " ? key : "Space"}</code> to go back.</p>
       </div>}
     </div>
