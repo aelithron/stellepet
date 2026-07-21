@@ -13,13 +13,20 @@ From there, the game loop is this:
 - After earning enough Pats, go to the shop (hold space to open the menu) and buy an Automatic Petter!
   - This will give you `+1 Pat` for each you have every five seconds! If you have four, you get `+4 Pats` every five seconds
 - Keep giving Stelle headpats to earn more Pats and buy more upgrades!
+- "Prestige" by buying a Kitten, resetting you to 0 but giving a permanent boost to new pats.
+- Repeat forever :3
 ## Shop Items
 Items can only be purchased once unless otherwise noted!
 - Automatic Petter: Gain `+1 Pat` every five seconds. Price starts at 200 Pats, then goes up by 150 Pats for each you have purchased.
   - You can purchase multiple Automatic Petters!
-- Cat Ears: Give Stelle cat ears, giving a 25% chance for a pat to double (giving +2 Pats instead of just +1). Only works on non-automatic pats. Price is 1500 Pats.
+- Cat Ears: Give Stelle cat ears, giving a 25% chance for an extra `+1 Pat` on any manual pat. Price is 1,500 Pats.
   - This also increases the chance of a pat causing a meow from 10% to 15%!
-- Skirt: Increase the speed of Automatic Petters to `+1 Pat` every three seconds (instead of five).
+- Skirt: Increase the speed of Automatic Petters to `+1 Pat` every three seconds (instead of five). Price is 4,000 Pats.
+- Kitten: Gain `+1 Pat` on every pat (so normal pats become +2, normal with cat ears 25% rolling is +3, etc).
+  - Price is 5,000+ pats (it resets your pats to 0) for the first, and then +5,000 pats for each next one.
+  - Buying this also resets any other upgrades (automatic petters -> 0, skirt and cat ears -> not owned).
+  - This is the equivalent to Prestiging in other clicker games!
+  - You can purchase multiple Kittens! The boost will just keep increasing :3
 ## Settings
 You can use the settings menu to change things :3
 - Mute SFX: Prevent sound effects from being played.
