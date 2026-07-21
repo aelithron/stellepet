@@ -124,7 +124,7 @@ export default function StellePet() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-28 md:gap-8">
         <div className="flex flex-col md:col-span-2 gap-2 justify-center items-center align-middle">
           {isPatting && <Image src={pet} alt="stelle pfp" height={214} width={224} loading="eager" className="absolute mb-32 z-10" />}
-          {catEarsOwned && <Image src={catEars} alt="Cat ears" loading="eager" height={200} width={200} className="absolute mb-25 z-5" />}
+          {catEarsOwned && <Image src={catEars} alt="Cat ears" loading="eager" className="absolute mb-40 z-5 object-top object-cover h-[112] w-[200]" />}
           <Image src={stelle} alt="stelle pfp" height={200} width={200} loading="eager" />
           {skirtOwned && <Image src={skirt} alt="Cat ears" loading="eager" className="absolute mt-75 z-5 object-bottom object-cover h-[100] w-[200]" />}
         </div>
