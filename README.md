@@ -38,6 +38,9 @@ You can use the settings menu to change things :3
 - There's a 10% chance on each human pat (not automated petter) for Stelle to meow! Stelle sent me this audio clip :3
   - The chance goes up to 15% if you have purchased cat ears in the shop!
 - There's a counter that tracks your all time pats, so you can still show that off after spending a lot in the shop!
+- Addy will appear after 50,000 all-time pats, and will give a permanent 1.5x boost to all pats! :3c
+  - This is not reset when buying a Kitten, and is not offered in the shop.
+  - This makes more sense with some Slack context lol
 ## Self-hosting
 I heavily suggest using Docker to self-host stellepet, it's just the simplest method!
 ### With Docker Compose
