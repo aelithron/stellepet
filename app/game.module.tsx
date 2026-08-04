@@ -10,6 +10,7 @@ import autoPet from "@/public/shop/auto_pet.gif";
 import catEars from "@/public/shop/cat_ears.png";
 import skirt from "@/public/shop/skirt.png";
 import kitten from "@/public/shop/kitten.png";
+import addy from "@/public/addy.png";
 import { getKey } from "./key.module";
 
 export default function StellePet() {
@@ -30,6 +31,7 @@ export default function StellePet() {
   const catEarsOwnedRef = useRef<boolean>(catEarsOwned);
   const autoPettersOwnedRef = useRef<number>(autoPettersOwned);
   const kittensOwnedRef = useRef<number>(kittensOwned);
+  const allTimePatsRef = useRef<number>(allTimePats);
   const muteRef = useRef<boolean>(muted);
   function addPat() {
     if (isPatting) return;
@@ -41,6 +43,7 @@ export default function StellePet() {
       setCatEarsWorked(true);
       setTimeout(() => setCatEarsWorked(false), 1500);
     }
+    if (allTimePatsRef.current >= 50000) add = Math.round(add * 1.5);
     setPats((prev) => (prev ?? 0) + add);
     setAllTimePats((prev) => (prev ?? 0) + add);
     if (!muteRef.current && ((!catEarsOwnedRef.current && Math.random() <= 0.1) || (catEarsOwnedRef.current && Math.random() <= 0.15))) new Audio("/sfx/meow.wav").play();
@@ -55,6 +58,7 @@ export default function StellePet() {
   useEffect(() => { catEarsOwnedRef.current = catEarsOwned }, [catEarsOwned]);
   useEffect(() => { autoPettersOwnedRef.current = autoPettersOwned }, [autoPettersOwned]);
   useEffect(() => { kittensOwnedRef.current = kittensOwned }, [kittensOwned]);
+  useEffect(() => { allTimePatsRef.current = allTimePats }, [allTimePats]);
   useEffect(() => { muteRef.current = muted }, [muted]);
   useEffect(() => {
     const storage = { pats: localStorage.getItem("pats"), allTime: localStorage.getItem("allTimePats"), catEars: (localStorage.getItem("catEars") === "true"), autoPetters: localStorage.getItem("autoPetters"), skirt: (localStorage.getItem("skirt") === "true"), kittens: localStorage.getItem("kittens"), muted: (localStorage.getItem("muted") === "true") };
@@ -104,8 +108,8 @@ export default function StellePet() {
     if (storage.skirt) autoPetDelay = 3000;
     clearAutoPetter.current = setInterval(() => {
       if (autoPettersOwnedRef.current === 0) return;
-      setPats((cur) => (cur ?? 0) + (autoPettersOwnedRef.current * (kittensOwnedRef.current + 1)));
-      setAllTimePats((cur) => (cur ?? 0) + (autoPettersOwnedRef.current * (kittensOwnedRef.current + 1)));
+      setPats((cur) => (cur ?? 0) + Math.round(autoPettersOwnedRef.current * (kittensOwnedRef.current + 1) * (allTimePatsRef.current >= 50000 ? 1.5 : 1)));
+      setAllTimePats((cur) => (cur ?? 0) + Math.round(autoPettersOwnedRef.current * (kittensOwnedRef.current + 1) * (allTimePatsRef.current >= 50000 ? 1.5 : 1)));
       setAutoPettersWorked(true);
       //new Audio("/sfx/meow.wav").play();
       setTimeout(() => setAutoPettersWorked(false), 1500);
@@ -123,6 +127,7 @@ export default function StellePet() {
       <p className="text-lg font-semibold mb-24">Pats: {new Intl.NumberFormat().format(pats)}</p>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-28 md:gap-8">
         <div className="flex flex-col md:col-span-2 gap-2 justify-center items-center align-middle">
+          {allTimePats >= 50000 && <Image src={addy} alt="Addy" loading="eager" height={80} width={80} className="absolute mb-90 mr-80" />}
           {isPatting && <Image src={pet} alt="stelle pfp" height={214} width={224} loading="eager" className="absolute mb-32 z-10" />}
           {catEarsOwned && <Image src={catEars} alt="Cat ears" loading="eager" className="absolute mb-40 z-5 object-top object-cover h-[112] w-[200]" />}
           <Image src={stelle} alt="stelle pfp" height={200} width={200} loading="eager" />
@@ -159,7 +164,16 @@ export default function StellePet() {
                 <p>Owned: {kittensOwned}</p>
               </div>
             </div>
-            <div className="text-balance"><p>Get upgrades from the</p> <p className="inline-block"><FontAwesomeIcon icon={faShop} /> Shop</p> in the <p className="inline-block"><FontAwesomeIcon icon={faBars} /> Menu</p>!</div>
+            <div className="flex gap-2 items-center">
+              <Image src={addy} alt="Addy" loading="eager" height={70} width={70} />
+              <div className="flex flex-col text-left">
+                <h2 className="text-lg">Addy</h2>
+                <p>Present: {allTimePats >= 50000 ? "Yes" : "No"} {allTimePats < 50000 && <span className="text-xs">({new Intl.NumberFormat().format(allTimePats)} / 50,000)</span>}</p>
+                <p className="text-sm">Arrives after 50k all-time pats.</p>
+                <p className="text-sm">She gives 1.5x to all pats.</p>
+              </div>
+            </div>
+            <div className="text-balance"><p>Get most upgrades from the</p> <p className="inline-block"><FontAwesomeIcon icon={faShop} /> Shop</p> in the <p className="inline-block"><FontAwesomeIcon icon={faBars} /> Menu</p>!</div>
           </div>
           <div className="bg-gray-200 dark:bg-gray-800 p-2 rounded-xl flex flex-col gap-2 text-center">
             <p>All-time Pats: {new Intl.NumberFormat().format(allTimePats)}</p>
