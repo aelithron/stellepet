@@ -157,6 +157,10 @@ export default function ShopMenu() {
       addEventListener("touchend", () => clearTimeout(timer), { once: true });
     }
     const upTouch = (e: TouchEvent) => {
+      if (ignoreUpRef.current) {
+        setIgnoreKeyUp(false);
+        return;
+      }
       e.preventDefault();
       handleCycle();
     }
@@ -199,7 +203,7 @@ export default function ShopMenu() {
     <div className="flex flex-col gap-4">
       <h1 className="text-center text-xl font-semibold">Pats: {new Intl.NumberFormat().format(pats)}</h1>
       {alertBox && <p className="text-center border-red-500 border-2 p-2 rounded-xl">{alertBox}</p>}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         <div className={`flex flex-col p-4 gap-1 text-xl items-center place-content-center h-full rounded-xl border-2 ${selection === 0 ? "border-black dark:border-white" : "border-gray-200 dark:border-gray-800"}`}>
           <FontAwesomeIcon icon={faArrowLeft} size="2xl" />
           <p>Back</p>
@@ -209,7 +213,7 @@ export default function ShopMenu() {
           <p className="text-xl">Automatic Petter</p>
           <p className="flex gap-1">+1 Pat every {skirtOwned ? <><s>5</s> 3</> : "5"} seconds</p>
           <p>Cost: {200 + (autoPettersOwned * 150)} Pats</p>
-          <div className="flex gap-1 items-center">
+          <div className="flex flex-col md:flex-row gap-1 items-center">
             <p>Owned: {autoPettersOwned}</p>
             <p className="text-sm">(can buy multiple)</p>
           </div>
@@ -242,7 +246,7 @@ export default function ShopMenu() {
             <p>get +1 Pat on all future pats</p>
           </div>
           <p>Cost: {(kittensOwned + 1) * 5000}+ Pats, any upgrades</p>
-          <div className="flex gap-1 items-center">
+          <div className="flex flex-col md:flex-row gap-1 items-center">
             <p>Owned: {kittensOwned}</p>
             <p className="text-sm">(can buy multiple)</p>
           </div>
