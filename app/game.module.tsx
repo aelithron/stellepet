@@ -70,11 +70,23 @@ export default function StellePet() {
     }
     const up = (e: KeyboardEvent) => {
       if (e.key !== key.current) return;
-      addPat();
       e.preventDefault();
+      addPat();
+    }
+    const downTouch = (e: TouchEvent) => {
+      e.preventDefault();
+      const timer = setTimeout(() => router.push("/menu"), 400)
+      addEventListener("touchend", () => clearTimeout(timer), { once: true });
+    }
+    const upTouch = (e: TouchEvent) => {
+      e.preventDefault();
+      addPat();
     }
     addEventListener("keydown", down);
     addEventListener("keyup", up);
+    addEventListener("touchstart", downTouch);
+    addEventListener("touchend", upTouch);
+
     if (storage.pats === null || isNaN(parseInt(storage.pats))) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setPats(0);
@@ -118,6 +130,8 @@ export default function StellePet() {
       if (clearAutoPetter.current) clearInterval(clearAutoPetter.current);
       removeEventListener("keydown", down);
       removeEventListener("keyup", up);
+      removeEventListener("touchstart", downTouch);
+      removeEventListener("touchend", upTouch);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

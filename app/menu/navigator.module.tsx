@@ -16,35 +16,23 @@ export default function NavigationMenu() {
   useEffect(() => { selRef.current = selection; }, [selection]);
   useEffect(() => { ignoreUpRef.current = ignoreKeyUp }, [ignoreKeyUp]);
   useEffect(() => {
-    const down = (e: KeyboardEvent) => {
-      if (e.key !== key.current) return;
-      e.preventDefault();
-      if (!e.repeat) setIgnoreKeyUp(false);
-      const timer = setTimeout(() => {
-        switch (selRef.current) {
-          case "back":
-            router.push("/");
-            break;
-          case "shop":
-            router.push("/shop");
-            break;
-          case "settings":
-            router.push("/settings");
-            break;
-          default:
-            break;
-        }
-        setIgnoreKeyUp(true);
-      }, 400)
-      addEventListener("keyup", () => clearTimeout(timer), { once: true });
-    }
-    const up = (e: KeyboardEvent) => {
-      if (e.key !== key.current) return;
-      if (ignoreUpRef.current) {
-        setIgnoreKeyUp(false);
-        return;
+    function handleNavigate() {
+      switch (selRef.current) {
+        case "back":
+          router.push("/");
+          break;
+        case "shop":
+          router.push("/shop");
+          break;
+        case "settings":
+          router.push("/settings");
+          break;
+        default:
+          break;
       }
-      e.preventDefault();
+      setIgnoreKeyUp(true);
+    }
+    function handleCycle() {
       switch (selRef.current) {
         case "back":
           setSelection("shop");
@@ -59,14 +47,43 @@ export default function NavigationMenu() {
           setSelection("back");
       }
     }
+    const down = (e: KeyboardEvent) => {
+      if (e.key !== key.current) return;
+      e.preventDefault();
+      if (!e.repeat) setIgnoreKeyUp(false);
+      const timer = setTimeout(() => handleNavigate(), 400);
+      addEventListener("keyup", () => clearTimeout(timer), { once: true });
+    }
+    const up = (e: KeyboardEvent) => {
+      if (e.key !== key.current) return;
+      if (ignoreUpRef.current) {
+        setIgnoreKeyUp(false);
+        return;
+      }
+      e.preventDefault();
+      handleCycle();
+    }
+    const downTouch = (e: TouchEvent) => {
+      e.preventDefault();
+      const timer = setTimeout(() => handleNavigate(), 400);
+      addEventListener("touchend", () => clearTimeout(timer), { once: true });
+    }
+    const upTouch = (e: TouchEvent) => {
+      e.preventDefault();
+      handleCycle();
+    }
     addEventListener("keydown", down);
     addEventListener("keyup", up);
+    addEventListener("touchstart", downTouch);
+    addEventListener("touchend", upTouch);
     return () => {
       removeEventListener("keydown", down);
       removeEventListener("keyup", up);
+      removeEventListener("touchstart", downTouch);
+      removeEventListener("touchend", upTouch);
       setIgnoreKeyUp(true);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div className="grid grid-cols-3 gap-4">
