@@ -41,17 +41,25 @@ export default function ImportSave() {
         return;
       }
     }
+    function touch() {
+      const timer = setTimeout(() => router.push("/settings"), 400);
+      addEventListener("touchend", () => clearTimeout(timer), { once: true });
+    }
     setTimeout(() => setIgnoreKeyDown(false), 1000);
     addEventListener("keydown", down);
-    return () => { removeEventListener("keydown", down); }
+    addEventListener("touchstart", touch);
+    return () => { 
+      removeEventListener("keydown", down);
+      removeEventListener("touchstart", touch);
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div className="flex flex-col gap-2 text-center">
       <p>Upload a save file below! This will instantly import and send you back to the home page.</p>
       <p>Note that this will overwrite your existing save.</p>
-      <p>You can also use <Key /> to go back to settings.</p>
-      <input type="file" className="bg-gray-300 dark:bg-gray-800 p-2 rounded-xl" onChange={(e) => readFile(e)} />
+      <p>You can also use <Key /> (or hold on a touchscreen) to go back to settings.</p>
+      <input type="file" className="bg-gray-300 dark:bg-gray-800 p-2 rounded-xl file:bg-gray-400 dark:file:bg-gray-900 file:p-1 file:rounded-md" onChange={(e) => readFile(e)} />
     </div>
   );
 }

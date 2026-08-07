@@ -21,62 +21,70 @@ export default function SettingsMenu() {
   useEffect(() => { ignoreUpRef.current = ignoreKeyUp }, [ignoreKeyUp]);
   useEffect(() => { muteRef.current = muted }, [muted]);
   useEffect(() => {
+    function handleChange() {
+      switch (selRef.current) {
+        case 0:
+          router.push("/menu");
+          setIgnoreKeyUp(true);
+          break;
+        case 1:
+          if (muteRef.current) {
+            setMuted(false);
+            localStorage.setItem("muted", "false");
+          } else {
+            setMuted(true);
+            localStorage.setItem("muted", "true");
+          }
+          setIgnoreKeyUp(true);
+          break;
+        case 2:
+          router.push("/settings/change");
+          setIgnoreKeyUp(true);
+          break;
+        case 3:
+          const data = { pats: localStorage.getItem("pats") ?? "0", allTimePats: localStorage.getItem("allTimePats") ?? "0", autoPetters: localStorage.getItem("autoPetters") ?? "0", catEars: localStorage.getItem("catEars") ?? "false", skirt: localStorage.getItem("skirt") ?? "false", kittens: localStorage.getItem("kittens") ?? "0" };
+          const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", `stellepet-export-${new Date().toISOString()}.json`);
+          document.body.appendChild(link);
+          link.click();
+          link.parentNode?.removeChild(link);
+          URL.revokeObjectURL(url);
+          setIgnoreKeyUp(true);
+          break;
+        case 4:
+          router.push("/settings/import");
+          setIgnoreKeyUp(true);
+          break;
+        case 5:
+          localStorage.setItem("pats", "0");
+          localStorage.setItem("allTimePats", "0");
+          localStorage.setItem("autoPetters", "0");
+          localStorage.setItem("catEars", "false");
+          localStorage.setItem("skirt", "false");
+          localStorage.setItem("kittens", "0");
+          localStorage.setItem("muted", "false");
+          localStorage.setItem("key", " ");
+          router.push("/");
+          setIgnoreKeyUp(true);
+          break;
+        default:
+          return;
+      }
+    }
+    function handleCycle() {
+      if (selRef.current >= 5) {
+        setSelection(0);
+        return;
+      }
+      setSelection(selRef.current + 1);
+    }
     const down = (e: KeyboardEvent) => {
       if (e.key !== key.current) return;
       if (!e.repeat) setIgnoreKeyUp(false);
       e.preventDefault();
-      const timer = setTimeout(() => {
-        switch (selRef.current) {
-          case 0:
-            router.push("/menu");
-            setIgnoreKeyUp(true);
-            break;
-          case 1:
-            if (muteRef.current) {
-              setMuted(false);
-              localStorage.setItem("muted", "false");
-            } else {
-              setMuted(true);
-              localStorage.setItem("muted", "true");
-            }
-            setIgnoreKeyUp(true);
-            break;
-          case 2:
-            router.push("/settings/change");
-            setIgnoreKeyUp(true);
-            break;
-          case 3:
-            const data = { pats: localStorage.getItem("pats") ?? "0", allTimePats: localStorage.getItem("allTimePats") ?? "0", autoPetters: localStorage.getItem("autoPetters") ?? "0", catEars: localStorage.getItem("catEars") ?? "false", skirt: localStorage.getItem("skirt") ?? "false", kittens: localStorage.getItem("kittens") ?? "0" };
-            const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }));
-            const link = document.createElement("a");
-            link.href = url;
-            link.setAttribute("download", `stellepet-export-${new Date().toISOString()}.json`);
-            document.body.appendChild(link);
-            link.click();
-            link.parentNode?.removeChild(link);
-            URL.revokeObjectURL(url);
-            setIgnoreKeyUp(true);
-            break;
-          case 4:
-            router.push("/settings/import");
-            setIgnoreKeyUp(true);
-            break;
-          case 5:
-            localStorage.setItem("pats", "0");
-            localStorage.setItem("allTimePats", "0");
-            localStorage.setItem("autoPetters", "0");
-            localStorage.setItem("catEars", "false");
-            localStorage.setItem("skirt", "false");
-            localStorage.setItem("kittens", "0");
-            localStorage.setItem("muted", "false");
-            localStorage.setItem("key", " ");
-            router.push("/");
-            setIgnoreKeyUp(true);
-            break;
-          default:
-            return;
-        }
-      }, 400)
+      const timer = setTimeout(() => handleChange(), 400);
       addEventListener("keyup", () => clearTimeout(timer), { once: true });
     }
     const up = (e: KeyboardEvent) => {
@@ -86,17 +94,30 @@ export default function SettingsMenu() {
         return;
       }
       e.preventDefault();
-      if (selRef.current >= 5) {
-        setSelection(0);
+      handleCycle();
+    }
+    const downTouch = (e: TouchEvent) => {
+      e.preventDefault();
+      const timer = setTimeout(() => handleChange(), 400);
+      addEventListener("touchend", () => clearTimeout(timer), { once: true });
+    }
+    const upTouch = (e: TouchEvent) => {
+      if (ignoreUpRef.current) {
+        setIgnoreKeyUp(false);
         return;
       }
-      setSelection(selRef.current + 1);
+      e.preventDefault();
+      handleCycle();
     }
     addEventListener("keydown", down);
     addEventListener("keyup", up);
+    addEventListener("touchstart", downTouch);
+    addEventListener("touchend", upTouch);
     return () => {
       removeEventListener("keydown", down);
       removeEventListener("keyup", up);
+      removeEventListener("touchstart", downTouch);
+      removeEventListener("touchend", upTouch);
       setIgnoreKeyUp(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

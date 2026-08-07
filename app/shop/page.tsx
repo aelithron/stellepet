@@ -11,10 +11,10 @@ export default function Page() {
     <div className="flex flex-col min-h-screen p-8 md:p-20">
       <h1 className="text-center mb-6 text-3xl font-semibold"><FontAwesomeIcon icon={faShop} /> Shop</h1>
       <ShopMenu />
-      <div className="flex w-fit mx-auto gap-2 mt-6 bg-gray-200 dark:bg-gray-800 rounded-xl p-2">
-        <p>Press <Key /> to change item</p>
+      <div className="flex flex-col md:flex-row text-center w-fit mx-auto gap-2 mt-6 bg-gray-200 dark:bg-gray-800 rounded-xl p-2">
+        <p>Press <Key /> (or screen) to change item</p>
         <p> ✧ </p>
-        <p>Hold <Key /> to buy highlighted item</p>
+        <p>Hold <Key /> (or screen) to buy highlighted item</p>
       </div>
     </div>
   );

@@ -39,99 +39,107 @@ export default function ShopMenu() {
   useEffect(() => { patsRef.current = pats; }, [pats]);
   useEffect(() => { ignoreUpRef.current = ignoreKeyUp }, [ignoreKeyUp]);
   useEffect(() => {
+    function handleShop() {
+      switch (selRef.current) {
+        case 0:
+          router.push("/menu");
+          break;
+        case 1:
+          const price = (200 + (autoPetRef.current * 150));
+          if (!patsRef.current || patsRef.current < price) {
+            setAlertBox(`You can't afford an Automatic Petter! (have ${patsRef.current ?? 0} pats, need ${price})`);
+            setIgnoreKeyUp(true);
+            if (!muteRef.current) new Audio("/sfx/error.mp3").play();
+            setTimeout(() => setAlertBox(undefined), 2000);
+            return;
+          }
+          setPats(patsRef.current - price);
+          localStorage.setItem("pats", `${patsRef.current - price}`);
+          setAutoPettersOwned(autoPetRef.current + 1);
+          localStorage.setItem("autoPetters", `${autoPetRef.current + 1}`);
+          if (!muteRef.current) new Audio("/sfx/success.mp3").play();
+          setIgnoreKeyUp(true);
+          break;
+        case 2:
+          if (catEarsRef.current) {
+            setAlertBox("You already own Cat Ears!");
+            if (!muteRef.current) new Audio("/sfx/error.mp3").play();
+            setTimeout(() => setAlertBox(undefined), 2000);
+            setIgnoreKeyUp(true);
+            return;
+          }
+          if (!patsRef.current || patsRef.current < 1500) {
+            setAlertBox(`You can't afford Cat Ears! (have ${patsRef.current ?? 0} pats, need 1500)`);
+            if (!muteRef.current) new Audio("/sfx/error.mp3").play();
+            setTimeout(() => setAlertBox(undefined), 2000);
+            setIgnoreKeyUp(true);
+            return;
+          }
+          setPats(patsRef.current - 1500);
+          localStorage.setItem("pats", `${patsRef.current - 1500}`);
+          setCatEarsOwned(true);
+          localStorage.setItem("catEars", "true");
+          if (!muteRef.current) new Audio("/sfx/success.mp3").play();
+          setIgnoreKeyUp(true);
+          break;
+        case 3:
+          if (skirtRef.current) {
+            setAlertBox("You already own a Skirt!");
+            if (!muteRef.current) new Audio("/sfx/error.mp3").play();
+            setTimeout(() => setAlertBox(undefined), 2000);
+            setIgnoreKeyUp(true);
+            return;
+          }
+          if (!patsRef.current || patsRef.current < 4000) {
+            setAlertBox(`You can't afford a Skirt! (have ${patsRef.current ?? 0} pats, need 4000)`);
+            if (!muteRef.current) new Audio("/sfx/error.mp3").play();
+            setTimeout(() => setAlertBox(undefined), 2000);
+            setIgnoreKeyUp(true);
+            return;
+          }
+          setPats(patsRef.current - 4000);
+          localStorage.setItem("pats", `${patsRef.current - 4000}`);
+          setSkirtOwned(true);
+          localStorage.setItem("skirt", "true");
+          if (!muteRef.current) new Audio("/sfx/success.mp3").play();
+          setIgnoreKeyUp(true);
+          break;
+        case 4:
+          if (!patsRef.current || patsRef.current < ((kittensRef.current + 1) * 5000)) {
+            setAlertBox(`You can't afford a Kitten! (have ${patsRef.current ?? 0} pats, need ${(kittensRef.current + 1) * 5000})`);
+            if (!muteRef.current) new Audio("/sfx/error.mp3").play();
+            setIgnoreKeyUp(true);
+            setTimeout(() => setAlertBox(undefined), 2000);
+            return;
+          }
+          setPats(0);
+          localStorage.setItem("pats", "0");
+          setAutoPettersOwned(0);
+          localStorage.setItem("autoPetters", "0");
+          setCatEarsOwned(false);
+          localStorage.setItem("catEars", "false");
+          setSkirtOwned(false);
+          localStorage.setItem("skirt", "false");
+          setKittensOwned(kittensRef.current + 1);
+          localStorage.setItem("kittens", `${kittensRef.current + 1}`);
+          if (!muteRef.current) new Audio("/sfx/success.mp3").play();
+          setIgnoreKeyUp(true);
+        default:
+          return;
+      }
+    }
+    function handleCycle() {
+      if (selRef.current >= 4) {
+        setSelection(0);
+        return;
+      }
+      setSelection(selRef.current + 1);
+    }
     const down = (e: KeyboardEvent) => {
       if (e.key !== key.current) return;
       if (!e.repeat) setIgnoreKeyUp(false);
       e.preventDefault();
-      const timer = setTimeout(() => {
-        switch (selRef.current) {
-          case 0:
-            router.push("/menu");
-            break;
-          case 1:
-            const price = (200 + (autoPetRef.current * 150));
-            if (!patsRef.current || patsRef.current < price) {
-              setAlertBox(`You can't afford an Automatic Petter! (have ${patsRef.current ?? 0} pats, need ${price})`);
-              setIgnoreKeyUp(true);
-              if (!muteRef.current) new Audio("/sfx/error.mp3").play();
-              setTimeout(() => setAlertBox(undefined), 2000);
-              return;
-            }
-            setPats(patsRef.current - price);
-            localStorage.setItem("pats", `${patsRef.current - price}`);
-            setAutoPettersOwned(autoPetRef.current + 1);
-            localStorage.setItem("autoPetters", `${autoPetRef.current + 1}`);
-            if (!muteRef.current) new Audio("/sfx/success.mp3").play();
-            setIgnoreKeyUp(true);
-            break;
-          case 2:
-            if (catEarsRef.current) {
-              setAlertBox("You already own Cat Ears!");
-              if (!muteRef.current) new Audio("/sfx/error.mp3").play();
-              setTimeout(() => setAlertBox(undefined), 2000);
-              setIgnoreKeyUp(true);
-              return;
-            }
-            if (!patsRef.current || patsRef.current < 1500) {
-              setAlertBox(`You can't afford Cat Ears! (have ${patsRef.current ?? 0} pats, need 1500)`);
-              if (!muteRef.current) new Audio("/sfx/error.mp3").play();
-              setTimeout(() => setAlertBox(undefined), 2000);
-              setIgnoreKeyUp(true);
-              return;
-            }
-            setPats(patsRef.current - 1500);
-            localStorage.setItem("pats", `${patsRef.current - 1500}`);
-            setCatEarsOwned(true);
-            localStorage.setItem("catEars", "true");
-            if (!muteRef.current) new Audio("/sfx/success.mp3").play();
-            setIgnoreKeyUp(true);
-            break;
-          case 3:
-            if (skirtRef.current) {
-              setAlertBox("You already own a Skirt!");
-              if (!muteRef.current) new Audio("/sfx/error.mp3").play();
-              setTimeout(() => setAlertBox(undefined), 2000);
-              setIgnoreKeyUp(true);
-              return;
-            }
-            if (!patsRef.current || patsRef.current < 4000) {
-              setAlertBox(`You can't afford a Skirt! (have ${patsRef.current ?? 0} pats, need 4000)`);
-              if (!muteRef.current) new Audio("/sfx/error.mp3").play();
-              setTimeout(() => setAlertBox(undefined), 2000);
-              setIgnoreKeyUp(true);
-              return;
-            }
-            setPats(patsRef.current - 4000);
-            localStorage.setItem("pats", `${patsRef.current - 4000}`);
-            setSkirtOwned(true);
-            localStorage.setItem("skirt", "true");
-            if (!muteRef.current) new Audio("/sfx/success.mp3").play();
-            setIgnoreKeyUp(true);
-            break;
-          case 4:
-            if (!patsRef.current || patsRef.current < ((kittensRef.current + 1) * 5000)) {
-              setAlertBox(`You can't afford a Kitten! (have ${patsRef.current ?? 0} pats, need ${(kittensRef.current + 1) * 5000})`);
-              if (!muteRef.current) new Audio("/sfx/error.mp3").play();
-              setIgnoreKeyUp(true);
-              setTimeout(() => setAlertBox(undefined), 2000);
-              return;
-            }
-            setPats(0);
-            localStorage.setItem("pats", "0");
-            setAutoPettersOwned(0);
-            localStorage.setItem("autoPetters", "0");
-            setCatEarsOwned(false);
-            localStorage.setItem("catEars", "false");
-            setSkirtOwned(false);
-            localStorage.setItem("skirt", "false");
-            setKittensOwned(kittensRef.current + 1);
-            localStorage.setItem("kittens", `${kittensRef.current + 1}`);
-            if (!muteRef.current) new Audio("/sfx/success.mp3").play();
-            setIgnoreKeyUp(true);
-          default:
-            return;
-        }
-      }, 400)
+      const timer = setTimeout(() => handleShop(), 400)
       addEventListener("keyup", () => clearTimeout(timer), { once: true });
     }
     const up = (e: KeyboardEvent) => {
@@ -141,11 +149,20 @@ export default function ShopMenu() {
         return;
       }
       e.preventDefault();
-      if (selRef.current >= 4) {
-        setSelection(0);
+      handleCycle();
+    }
+    const downTouch = (e: TouchEvent) => {
+      e.preventDefault();
+      const timer = setTimeout(() => handleShop(), 400)
+      addEventListener("touchend", () => clearTimeout(timer), { once: true });
+    }
+    const upTouch = (e: TouchEvent) => {
+      if (ignoreUpRef.current) {
+        setIgnoreKeyUp(false);
         return;
       }
-      setSelection(selRef.current + 1);
+      e.preventDefault();
+      handleCycle();
     }
     const storage = { pats: localStorage.getItem("pats"), catEars: (localStorage.getItem("catEars") === "true"), autoPetters: localStorage.getItem("autoPetters"), skirt: (localStorage.getItem("skirt") === "true"), kittens: localStorage.getItem("kittens"), muted: (localStorage.getItem("muted") === "true") };
     if (storage.pats === null || isNaN(parseInt(storage.pats))) {
@@ -170,19 +187,23 @@ export default function ShopMenu() {
 
     addEventListener("keydown", down);
     addEventListener("keyup", up);
+    addEventListener("touchstart", downTouch);
+    addEventListener("touchend", upTouch);
     return () => {
       removeEventListener("keydown", down);
       removeEventListener("keyup", up);
+      removeEventListener("touchstart", downTouch);
+      removeEventListener("touchend", upTouch);
       setIgnoreKeyUp(true);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   if (pats === undefined) return (<h1 className="text-xl font-semibold">Loading...</h1>);
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-center text-xl font-semibold">Pats: {new Intl.NumberFormat().format(pats)}</h1>
       {alertBox && <p className="text-center border-red-500 border-2 p-2 rounded-xl">{alertBox}</p>}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         <div className={`flex flex-col p-4 gap-1 text-xl items-center place-content-center h-full rounded-xl border-2 ${selection === 0 ? "border-black dark:border-white" : "border-gray-200 dark:border-gray-800"}`}>
           <FontAwesomeIcon icon={faArrowLeft} size="2xl" />
           <p>Back</p>
@@ -192,7 +213,7 @@ export default function ShopMenu() {
           <p className="text-xl">Automatic Petter</p>
           <p className="flex gap-1">+1 Pat every {skirtOwned ? <><s>5</s> 3</> : "5"} seconds</p>
           <p>Cost: {200 + (autoPettersOwned * 150)} Pats</p>
-          <div className="flex gap-1 items-center">
+          <div className="flex flex-col md:flex-row gap-1 items-center">
             <p>Owned: {autoPettersOwned}</p>
             <p className="text-sm">(can buy multiple)</p>
           </div>
@@ -221,11 +242,11 @@ export default function ShopMenu() {
           <Image src={kitten} alt="Kitten" loading="eager" height={70} width={70} />
           <p className="text-xl">Kitten</p>
           <div className="flex flex-col items-center mb-1">
-             <p>Reset all upgrades and Pats,</p>
+            <p>Reset all upgrades and Pats,</p>
             <p>get +1 Pat on all future pats</p>
           </div>
           <p>Cost: {(kittensOwned + 1) * 5000}+ Pats, any upgrades</p>
-          <div className="flex gap-1 items-center">
+          <div className="flex flex-col md:flex-row gap-1 items-center">
             <p>Owned: {kittensOwned}</p>
             <p className="text-sm">(can buy multiple)</p>
           </div>

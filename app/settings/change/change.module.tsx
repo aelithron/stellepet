@@ -30,15 +30,23 @@ export default function ChangeKey() {
         return;
       }
     }
+    function touch() {
+      const timer = setTimeout(() => router.push("/settings"), 400);
+      addEventListener("touchend", () => clearTimeout(timer), { once: true });
+    }
     addEventListener("keydown", down);
-    return () => { removeEventListener("keydown", down); }
+    addEventListener("touchstart", touch);
+    return () => {
+      removeEventListener("keydown", down);
+      removeEventListener("touchstart", touch);
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div>
       {!newKey && <div className="flex flex-col gap-2 text-center">
         <p>Press the key you would like to change to!</p>
-        <p>Alternatively, press <code>{key !== " " ? key : "Space"}</code> to go back.</p>
+        <p>Alternatively, press <code>{key !== " " ? key : "Space"}</code> (or hold on a touchscreen) to go back.</p>
       </div>}
       {newKey && <div className="flex flex-col gap-2 text-center">
         <p>Are you sure you want to change your key from <code>{key !== " " ? key : "Space"}</code> to <code>{newKey !== " " ? newKey : "Space"}</code>?</p>
