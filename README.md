@@ -7,10 +7,10 @@ This was made for Hack Club [onekey](https://onekey.hackclub.com).
 </a>
 
 ## How to Play
-Open [stelle.transfem.xyz](https://stelle.transfem.xyz) in your web browser on a computer! \
+Open [stelle.transfem.xyz](https://stelle.transfem.xyz) in your web browser! \
 From there, the game loop is this:
-- Press space to give Stelle a headpat, gaining `+1 Pat` on the counter!
-- After earning enough Pats, go to the shop (hold space to open the menu) and buy an Automatic Petter!
+- Press space (or tap on mobile) to give Stelle a headpat, gaining `+1 Pat` on the counter!
+- After earning enough Pats, go to the shop (hold space, or hold on mobile, to open the menu) and buy an Automatic Petter!
   - This will give you `+1 Pat` for each you have every five seconds! If you have four, you get `+4 Pats` every five seconds
 - Keep giving Stelle headpats to earn more Pats and buy more upgrades!
 - "Prestige" by buying a Kitten, resetting you to 0 but giving a permanent boost to new pats.
