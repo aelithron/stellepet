@@ -26,6 +26,7 @@ export default function StellePet() {
   const [kittensOwned, setKittensOwned] = useState<number>(0);
   const [autoPettersWorked, setAutoPettersWorked] = useState<boolean>(false);
   const [muted, setMuted] = useState<boolean>(false);
+  const [onMobileCooldown, setMobileCooldown] = useState<boolean>(false);
   const clearLast = useRef<NodeJS.Timeout | undefined>(undefined);
   const clearAutoPetter = useRef<NodeJS.Timeout | undefined>(undefined);
   const catEarsOwnedRef = useRef<boolean>(catEarsOwned);
@@ -33,6 +34,7 @@ export default function StellePet() {
   const kittensOwnedRef = useRef<number>(kittensOwned);
   const allTimePatsRef = useRef<number>(allTimePats);
   const muteRef = useRef<boolean>(muted);
+  const mobileCooldownRef = useRef<boolean>(onMobileCooldown);
   function addPat() {
     if (isPatting) return;
     if (clearLast.current) clearTimeout(clearLast.current);
@@ -60,6 +62,7 @@ export default function StellePet() {
   useEffect(() => { kittensOwnedRef.current = kittensOwned }, [kittensOwned]);
   useEffect(() => { allTimePatsRef.current = allTimePats }, [allTimePats]);
   useEffect(() => { muteRef.current = muted }, [muted]);
+  useEffect(() => { mobileCooldownRef.current = onMobileCooldown }, [onMobileCooldown]);
   useEffect(() => {
     const storage = { pats: localStorage.getItem("pats"), allTime: localStorage.getItem("allTimePats"), catEars: (localStorage.getItem("catEars") === "true"), autoPetters: localStorage.getItem("autoPetters"), skirt: (localStorage.getItem("skirt") === "true"), kittens: localStorage.getItem("kittens"), muted: (localStorage.getItem("muted") === "true") };
     const down = (e: KeyboardEvent) => {
@@ -80,7 +83,10 @@ export default function StellePet() {
     }
     const upTouch = (e: TouchEvent) => {
       e.preventDefault();
+      if (mobileCooldownRef.current) return;
       addPat();
+      setMobileCooldown(true);
+      setTimeout(() => setMobileCooldown(false), 100);
     }
     addEventListener("keydown", down);
     addEventListener("keyup", up);
